@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
+import {Button} from '@material-ui/core';
 import { GET_ALL_TOPICS } from "src/apollo/queries";
 import { ALL_TOPICS } from "src/types/types";
 import { Layout } from "src/components/Layout/Layout";
@@ -12,8 +13,6 @@ const Index: React.FC = () => {
     error,
     data,
   }: { loading: any; error: any; data: ALL_TOPICS } = useQuery(GET_ALL_TOPICS);
-
-  console.log(data);
 
   return (
     <>
@@ -29,21 +28,31 @@ const Index: React.FC = () => {
             ) : (
               data.allTopics.edges.map((topic, index) => {
                 return (
-                  <div className="m-2 border w-1/3" key={index}>
-                    <div className="text-xl">{topic.node.title}</div>
-                    <div
-                      className={
-                        topic.node.isTalking ? "text-red-600" : "text-blue-600"
-                      }
-                    >
-                      isTalking: {String(topic.node.isTalking)}
-                    </div>
-                    <div
-                      className={
-                        topic.node.isClosed ? "text-red-600" : "text-blue-600"
-                      }
-                    >
-                      isClosed: {String(topic.node.isClosed)}
+                  <div className="p-1 w-1/3" key={index}>
+                    <div className="border p-2">
+                      <div className="text-xl">{topic.node.title}</div>
+                      <div
+                        className={
+                          topic.node.isTalking
+                            ? "text-red-600"
+                            : "text-blue-600"
+                        }
+                      >
+                        isTalking: {String(topic.node.isTalking)}
+                      </div>
+                      <div
+                        className={
+                          topic.node.isClosed ? "text-red-600" : "text-blue-600"
+                        }
+                      >
+                        isClosed: {String(topic.node.isClosed)}
+                      </div>
+                      <Button variant='contained'>
+                        削除
+                      </Button>
+                      <Button variant='contained'>
+                        終了
+                      </Button>
                     </div>
                   </div>
                 );
@@ -52,14 +61,12 @@ const Index: React.FC = () => {
           </div>
           <div className="w-1/3">
             <div className="bg-red-200">
-              <h2 className='text-xl text-center py-2'>Talking</h2>
-              <h3 className='text-lg'>
-                hogeeeeeeeeeee
-              </h3>
+              <h2 className="text-xl text-center py-2">Talking</h2>
+              <h3 className="text-lg">hogeeeeeeeeeee</h3>
             </div>
             <div className="bg-green-200">
-              <h2 className='text-xl text-center py-2'>Closed</h2>
-              <h3 className='text-lg'>fooooooo</h3>
+              <h2 className="text-xl text-center py-2">Closed</h2>
+              <h3 className="text-lg">fooooooo</h3>
             </div>
           </div>
         </div>
