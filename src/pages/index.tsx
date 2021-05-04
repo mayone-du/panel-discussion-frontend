@@ -8,7 +8,7 @@ const Index: React.FC = () => {
   const {
     loading: allTopicsLoading,
     error: allTopicsError,
-    data: AllTopicsData,
+    data: allTopicsData,
   } = useQuery(GET_ALL_TOPICS);
 
   return (
@@ -22,8 +22,8 @@ const Index: React.FC = () => {
           <div className="w-2/3 bg-blue-200 flex flex-wrap">
             {allTopicsLoading && (<div className='text-9xl'>Loading</div>)}
             {allTopicsError && (<div className='text-3xl'>{allTopicsError.message}</div>)}
-            {AllTopicsData.allTopics && (
-              AllTopicsData.allTopics.edges.map((topic, index) => {
+            {allTopicsData && (
+              allTopicsData.allTopics.edges.map((topic, index) => {
                 return (
                   <div className="p-1 w-1/3" key={index}>
                     <div className="border p-2">
