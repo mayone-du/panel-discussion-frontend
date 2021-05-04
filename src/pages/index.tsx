@@ -1,10 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { Button } from "@material-ui/core";
+import { useContext } from "react";
 import { GET_ALL_TOPICS } from "src/apollo/queries";
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
+import { UserContext } from "src/contexts/UserContext";
 
 const Index: React.FC = () => {
+  const { adminUsername } = useContext(UserContext);
+
   const {
     loading: allTopicsLoading,
     error: allTopicsError,
@@ -20,9 +24,11 @@ const Index: React.FC = () => {
 
         <div className="flex">
           <div className="w-2/3 bg-blue-200 flex flex-wrap">
-            {allTopicsLoading && (<div className='text-9xl'>Loading</div>)}
-            {allTopicsError && (<div className='text-3xl'>{allTopicsError.message}</div>)}
-            {allTopicsData && (
+            {allTopicsLoading && <div className="text-9xl">Loading</div>}
+            {allTopicsError && (
+              <div className="text-3xl">{allTopicsError.message}</div>
+            )}
+            {allTopicsData &&
               allTopicsData.allTopics.edges.map((topic, index) => {
                 return (
                   <div className="p-1 w-1/3" key={index}>
@@ -44,13 +50,18 @@ const Index: React.FC = () => {
                       >
                         isClosed: {String(topic.node.isClosed)}
                       </div>
-                      <Button variant="contained">削除</Button>
-                      <Button variant="contained">終了</Button>
+                      {adminUsername ? (
+                        <>
+                          <Button variant="contained">削除</Button>
+                          <Button variant="contained">終了</Button>
+                        </>
+                      ) : (
+                        <div>hoge</div>
+                      )}
                     </div>
                   </div>
                 );
-              })
-            )}
+              })}
           </div>
           <div className="w-1/3">
             <div className="bg-red-200">

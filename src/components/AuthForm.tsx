@@ -1,10 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { useRouter } from "next/router";
 import { GET_AUTH_TOKEN } from "src/apollo/queries";
+import { UserContext } from "src/contexts/UserContext";
 
 export const AuthForm: React.VFC = () => {
+  const { adminUsername, setAdminUsername } = useContext(UserContext);
 
   const router = useRouter();
   const [getAuthToken] = useMutation(GET_AUTH_TOKEN);
@@ -25,7 +27,7 @@ export const AuthForm: React.VFC = () => {
     []
   );
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await getAuthToken({
@@ -34,20 +36,26 @@ export const AuthForm: React.VFC = () => {
           password: password,
         },
       });
-      setUsername("");
-      setPassword("");
       result.data &&
         localStorage.setItem("accessToken", result.data.tokenAuth.token);
+      setAdminUsername(username);
+      setUsername("");
+      setPassword("");
+
       router.push("/");
     } catch (error) {
       alert(error);
     }
   };
 
+  const handleLogout = async () => {
+    localStorage.removeItem("accessToken");
+    setAdminUsername("");
+  };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div>
           <TextField
             type="text"
@@ -73,6 +81,19 @@ export const AuthForm: React.VFC = () => {
           </Button>
         </div>
       </form>
+
+      {adminUsername && (
+        <div>
+          <Button
+            href="/"
+            onClick={handleLogout}
+            variant="contained"
+            color="secondary"
+          >
+            LOGOUT
+          </Button>
+        </div>
+      )}
     </>
   );
 };

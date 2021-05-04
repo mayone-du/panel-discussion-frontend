@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Button } from "@material-ui/core";
+import {UserContext} from 'src/contexts/UserContext';
+import { useContext } from "react";
 
 export const Layout: React.FC<{ children: any }> = ({ children }) => {
+  const {adminUsername} = useContext(UserContext);
   return (
     <>
       <header className="p-2 bg-gray-50">
@@ -20,6 +23,9 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
                   管理者ログイン
                 </Button>
               </Link>
+            </li>
+            <li>
+              ユーザー情報: {adminUsername ? adminUsername : "ゲスト"}
             </li>
           </ul>
         </nav>

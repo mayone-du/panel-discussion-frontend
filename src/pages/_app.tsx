@@ -1,6 +1,7 @@
 import "src/styles/globalResets.css";
 import "src/styles/globals.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { UserContextProvider } from "src/contexts/UserContext";
 
 const App = ({ Component, pageProps }) => {
   const client = new ApolloClient({
@@ -12,7 +13,9 @@ const App = ({ Component, pageProps }) => {
   });
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+      <UserContextProvider>
+        <Component {...pageProps} />
+      </UserContextProvider>
     </ApolloProvider>
   );
 };
