@@ -1,7 +1,10 @@
+import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
 import { GET_ALL_TOPICS } from "src/apollo/queries";
 import { ALL_TOPICS } from "src/types/types";
+import { Layout } from "src/components/Layout/Layout";
+import { TopicForm } from "src/components/TopicForm";
 
 const Index: React.FC = () => {
   const {
@@ -10,36 +13,57 @@ const Index: React.FC = () => {
     data,
   }: { loading: any; error: any; data: ALL_TOPICS } = useQuery(GET_ALL_TOPICS);
 
+  console.log(data);
+
   return (
     <>
-      <div>
-        {loading ? (
-          <div className="text-6xl">Loading</div>
-        ) : (
-          data.allTopics.edges.map((topic, index) => {
-            return (
-              <div className="border m-8" key={index}>
-                <div className="text-lg">{topic.node.id}</div>
-                <div className="text-xl">{topic.node.title}</div>
-                <div
-                  className={
-                    topic.node.isTalking ? "text-red-600" : "text-blue-600"
-                  }
-                >
-                  isTalking: {String(topic.node.isTalking)}
-                </div>
-                <div
-                  className={
-                    topic.node.isClosed ? "text-red-600" : "text-blue-600"
-                  }
-                >
-                  isClosed: {String(topic.node.isClosed)}
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
+      <Layout>
+        <div className="flex justify-center py-4">
+          <TopicForm />
+        </div>
+
+        <div className="flex">
+          <div className="w-2/3 bg-blue-200 flex flex-wrap">
+            {loading ? (
+              <div className="text-6xl">Loading</div>
+            ) : (
+              data.allTopics.edges.map((topic, index) => {
+                return (
+                  <div className="m-2 border w-1/3" key={index}>
+                    <div className="text-xl">{topic.node.title}</div>
+                    <div
+                      className={
+                        topic.node.isTalking ? "text-red-600" : "text-blue-600"
+                      }
+                    >
+                      isTalking: {String(topic.node.isTalking)}
+                    </div>
+                    <div
+                      className={
+                        topic.node.isClosed ? "text-red-600" : "text-blue-600"
+                      }
+                    >
+                      isClosed: {String(topic.node.isClosed)}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+          <div className="w-1/3">
+            <div className="bg-red-200">
+              <h2 className='text-xl text-center py-2'>Talking</h2>
+              <h3 className='text-lg'>
+                hogeeeeeeeeeee
+              </h3>
+            </div>
+            <div className="bg-green-200">
+              <h2 className='text-xl text-center py-2'>Closed</h2>
+              <h3 className='text-lg'>fooooooo</h3>
+            </div>
+          </div>
+        </div>
+      </Layout>
     </>
   );
 };
