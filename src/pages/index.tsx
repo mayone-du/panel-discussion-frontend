@@ -1,18 +1,15 @@
-import Link from "next/link";
 import { useQuery } from "@apollo/client";
-import { useEffect } from "react";
-import {Button} from '@material-ui/core';
+import { Button } from "@material-ui/core";
 import { GET_ALL_TOPICS } from "src/apollo/queries";
-import { ALL_TOPICS } from "src/types/types";
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
 
 const Index: React.FC = () => {
   const {
-    loading,
-    error,
-    data,
-  }: { loading: any; error: any; data: ALL_TOPICS } = useQuery(GET_ALL_TOPICS);
+    loading: allTopicsLoading,
+    error: allTopicsError,
+    data: AllTopicsData,
+  } = useQuery(GET_ALL_TOPICS);
 
   return (
     <>
@@ -23,10 +20,10 @@ const Index: React.FC = () => {
 
         <div className="flex">
           <div className="w-2/3 bg-blue-200 flex flex-wrap">
-            {loading ? (
-              <div className="text-6xl">Loading</div>
-            ) : (
-              data.allTopics.edges.map((topic, index) => {
+            {allTopicsLoading && (<div className='text-9xl'>Loading</div>)}
+            {allTopicsError && (<div className='text-3xl'>{allTopicsError.message}</div>)}
+            {AllTopicsData.allTopics && (
+              AllTopicsData.allTopics.edges.map((topic, index) => {
                 return (
                   <div className="p-1 w-1/3" key={index}>
                     <div className="border p-2">
@@ -47,12 +44,8 @@ const Index: React.FC = () => {
                       >
                         isClosed: {String(topic.node.isClosed)}
                       </div>
-                      <Button variant='contained'>
-                        削除
-                      </Button>
-                      <Button variant='contained'>
-                        終了
-                      </Button>
+                      <Button variant="contained">削除</Button>
+                      <Button variant="contained">終了</Button>
                     </div>
                   </div>
                 );
