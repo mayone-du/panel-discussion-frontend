@@ -22,3 +22,14 @@ export const GET_ALL_TOPICS = gql`
     }
   }
 `;
+
+export const CREATE_TOPIC = gql`
+  mutation($title: String!) {
+    createTopic(input: {title: $title}) {
+      topic {
+        id
+        title
+      }
+    }
+  }
+`;

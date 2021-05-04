@@ -56,7 +56,7 @@ const Index: React.FC = () => {
                           <Button variant="contained">終了</Button>
                         </>
                       ) : (
-                        <div>hoge</div>
+                        <div>AdminUser only</div>
                       )}
                     </div>
                   </div>

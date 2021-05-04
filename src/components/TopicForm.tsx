@@ -1,16 +1,54 @@
+import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
+import React, { useState } from "react";
+import { GET_ALL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
 export const TopicForm: React.VFC = () => {
+  const [topicTitle, setTopicTitle] = useState("");
+  const handleTitleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setTopicTitle(e.target.value);
+  };
+
+  const [createTopic] = useMutation(CREATE_TOPIC, {
+    refetchQueries: [{ query: GET_ALL_TOPICS }],
+  });
+
+  const handleTopicCreate = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (topicTitle) {
+      createTopic({
+        variables: {
+          title: topicTitle,
+        },
+      });
+      setTopicTitle("");
+    } else {
+      alert("話題を入力してください。");
+      return;
+    }
+  };
+
   return (
     <>
-      <div className="flex items-center">
+      <form onSubmit={handleTopicCreate} className="flex items-center">
         <div>
-          <TextField variant="outlined" placeholder="話題を入力" />
+          <TextField
+            type="text"
+            value={topicTitle}
+            onChange={handleTitleChange}
+            variant="outlined"
+            placeholder="話題を入力"
+          />
         </div>
         <div>
-          <Button variant="outlined">作成</Button>
+          <Button type="submit" variant="outlined">
+            作成
+          </Button>
         </div>
-      </div>
+      </form>
     </>
   );
 };

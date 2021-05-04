@@ -1,4 +1,6 @@
+import {Dispatch, SetStateAction} from 'react';
+
 export type USER_CONTEXT = {
-  username: string;
-  isLogin: boolean;
+  adminUsername: string;
+  setAdminUsername: Dispatch<SetStateAction<string>>;
 }
