@@ -10,11 +10,6 @@ const Index: React.FC = () => {
   return (
     <>
       <div>
-        {/* {loading
-          ? "loading"
-          : data.allTopics.edges.map((topic, index) => {
-              return <div key={index}>{topic}</div>;
-            })} */}
         {loading
           ? <div className="text-6xl">Loading</div>
           : data.allTopics.edges.map((topic, index) => {
