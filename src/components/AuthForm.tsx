@@ -2,14 +2,15 @@ import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
 import React, { useState, useCallback, useContext } from "react";
 import { useRouter } from "next/router";
-import { GET_AUTH_TOKEN } from "src/apollo/queries";
+import { GET_TOKENS } from "src/apollo/queries";
 import { UserContext } from "src/contexts/UserContext";
+import { destroyCookie, setCookie } from "nookies";
 
 export const AuthForm: React.VFC = () => {
-  const { adminUsername, setAdminUsername } = useContext(UserContext);
+  const { isAdminLogin, setIsAdminLogin } = useContext(UserContext);
 
   const router = useRouter();
-  const [getAuthToken] = useMutation(GET_AUTH_TOKEN);
+  const [getTokens] = useMutation(GET_TOKENS);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,15 +31,22 @@ export const AuthForm: React.VFC = () => {
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const result = await getAuthToken({
+      const result = await getTokens({
         variables: {
           username: username,
           password: password,
         },
       });
       result.data &&
-        localStorage.setItem("accessToken", result.data.tokenAuth.token);
-      setAdminUsername(username);
+        setCookie(null, "accessToken", result.data.tokenAuth.token, {
+          path: "/",
+          maxAge: 60 * 60,
+        });
+      setCookie(null, "refreshToken", result.data.tokenAuth.refreshToken, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+      setIsAdminLogin(true);
       setUsername("");
       setPassword("");
 
@@ -49,8 +57,9 @@ export const AuthForm: React.VFC = () => {
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem("accessToken");
-    setAdminUsername("");
+    destroyCookie(null, "accessToken");
+    destroyCookie(null, "refreshToken");
+    setIsAdminLogin(false);
   };
 
   return (
@@ -82,10 +91,9 @@ export const AuthForm: React.VFC = () => {
         </div>
       </form>
 
-      {adminUsername && (
+      {isAdminLogin && (
         <div>
           <Button
-            href="/"
             onClick={handleLogout}
             variant="contained"
             color="secondary"

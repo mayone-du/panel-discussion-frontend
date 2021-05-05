@@ -1,19 +1,50 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
 import { useContext } from "react";
 import { GET_ALL_TOPICS } from "src/apollo/queries";
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
 import { UserContext } from "src/contexts/UserContext";
+import { UPDATE_TOPIC } from "src/apollo/queries";
 
 const Index: React.FC = () => {
-  const { adminUsername } = useContext(UserContext);
+
+  const { isAdminLogin } = useContext(UserContext);
 
   const {
     loading: allTopicsLoading,
     error: allTopicsError,
     data: allTopicsData,
   } = useQuery(GET_ALL_TOPICS);
+
+  const [updateTopic] = useMutation(UPDATE_TOPIC, {
+    refetchQueries: [{ query: GET_ALL_TOPICS }],
+  });
+
+  const handleTalking = async (topic) => {
+    try {
+      await updateTopic({
+        variables: {
+          id: topic.node.id,
+          title: topic.node.title,
+          isTalking: !topic.node.isTalking,
+          isClosed: false,
+        },
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleClose = () => {
+    alert("close");
+    return;
+  };
+
+  const handleDelete = () => {
+    alert("delete");
+    return;
+  };
 
   return (
     <>
@@ -50,10 +81,22 @@ const Index: React.FC = () => {
                       >
                         isClosed: {String(topic.node.isClosed)}
                       </div>
-                      {adminUsername ? (
+                      {isAdminLogin ? (
                         <>
-                          <Button variant="contained">削除</Button>
-                          <Button variant="contained">終了</Button>
+                          <Button variant="contained" onClick={handleDelete}>
+                            delete
+                          </Button>
+                          <Button variant="contained" onClick={handleClose}>
+                            close
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              handleTalking(topic);
+                            }}
+                          >
+                            talking
+                          </Button>
                         </>
                       ) : (
                         <div>AdminUser only</div>

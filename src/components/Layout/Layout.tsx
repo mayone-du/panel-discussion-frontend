@@ -1,10 +1,33 @@
 import Link from "next/link";
 import { Button } from "@material-ui/core";
-import {UserContext} from 'src/contexts/UserContext';
-import { useContext } from "react";
+import { useMutation } from "@apollo/client";
+import { UserContext } from "src/contexts/UserContext";
+import { parseCookies } from "nookies";
+import { useContext, useEffect } from "react";
+import { REFRESH_TOKENS } from "src/apollo/queries";
 
 export const Layout: React.FC<{ children: any }> = ({ children }) => {
-  const {adminUsername} = useContext(UserContext);
+  const { isAdminLogin, setIsAdminLogin } = useContext(UserContext);
+
+  const [refreshTokens] = useMutation(REFRESH_TOKENS);
+
+  useEffect(() => {
+    const cookies = parseCookies();
+
+    if (cookies.refreshToken) {
+      (async () => {
+        await refreshTokens({
+          variables: {
+            refreshToken: cookies.refreshToken,
+          },
+        });
+        setIsAdminLogin(true);
+      })();
+    } else {
+      console.log("Token is None");
+    }
+  }, []);
+
   return (
     <>
       <header className="p-2 bg-gray-50">
@@ -24,15 +47,13 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
                 </Button>
               </Link>
             </li>
-            <li>
-              ユーザー情報: {adminUsername ? adminUsername : "ゲスト"}
-            </li>
+            <li>ユーザー情報: {isAdminLogin ? 'AdminUser' : "ゲスト"}</li>
           </ul>
         </nav>
       </header>
       <main>
         <article>
-          <section className='px-20'>{children}</section>
+          <section className="px-20">{children}</section>
         </article>
       </main>
     </>

@@ -2,16 +2,16 @@ import { createContext, useState } from "react";
 import { USER_CONTEXT } from "src/types/types";
 
 export const UserContext = createContext<USER_CONTEXT>({
-  adminUsername: "",
-  setAdminUsername: () => {},
+  isAdminLogin: false,
+  setIsAdminLogin: () => {},
 });
 
 export const UserContextProvider: React.FC = ({ children }) => {
-  const [adminUsername, setAdminUsername] = useState("");
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
 
   const value = {
-    adminUsername: adminUsername,
-    setAdminUsername: setAdminUsername,
+    isAdminLogin: isAdminLogin,
+    setIsAdminLogin: setIsAdminLogin,
   };
 
   return (
