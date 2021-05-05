@@ -9,7 +9,7 @@ export const GET_TOKENS = gql`
   }
 `;
 
-export const REFRESH_TOKENS = gql`
+export const ALL_TOKEN_REFRESH = gql`
   mutation($refreshToken: String) {
     refreshToken(refreshToken: $refreshToken) {
       token
@@ -33,6 +33,20 @@ export const GET_ALL_TOPICS = gql`
   }
 `;
 
+export const GET_NORMAL_TOPICS = gql`
+  query {
+    allTopics(isTalking: false, isClosed: false) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }
+`;
 
 export const GET_TALKING_TOPIC = gql`
   query {
@@ -64,9 +78,6 @@ export const GET_CLOSED_TOPICS = gql`
   }
 `;
 
-
-
-
 export const CREATE_TOPIC = gql`
   mutation($title: String!) {
     createTopic(input: { title: $title }) {
@@ -79,15 +90,36 @@ export const CREATE_TOPIC = gql`
 `;
 
 export const UPDATE_TOPIC = gql`
-  mutation($id: ID!, $title: String!, $isTalking: Boolean!, $isClosed: Boolean!) {
+  mutation(
+    $id: ID!
+    $title: String!
+    $isTalking: Boolean!
+    $isClosed: Boolean!
+  ) {
     updateTopic(
-      input: { id: $id, title: $title, isTalking: $isTalking, isClosed: $isClosed }
+      input: {
+        id: $id
+        title: $title
+        isTalking: $isTalking
+        isClosed: $isClosed
+      }
     ) {
       topic {
         id
         title
         isTalking
         isClosed
+      }
+    }
+  }
+`;
+
+export const DELETE_TOPIC = gql`
+  mutation($id: ID!) {
+    deleteTopic(input: { id: $id }) {
+      topic {
+        id
+        title
       }
     }
   }

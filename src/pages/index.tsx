@@ -4,9 +4,11 @@ import { DeleteForever, Check, Chat } from "@material-ui/icons";
 import { useContext } from "react";
 import {
   GET_ALL_TOPICS,
+  GET_NORMAL_TOPICS,
   GET_TALKING_TOPIC,
   GET_CLOSED_TOPICS,
   UPDATE_TOPIC,
+  DELETE_TOPIC,
 } from "src/apollo/queries";
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
@@ -16,20 +18,31 @@ const Index: React.FC = () => {
   const { isAdminLogin } = useContext(UserContext);
 
   const {
-    loading: allTopicsLoading,
-    error: allTopicsError,
-    data: allTopicsData,
-  } = useQuery(GET_ALL_TOPICS);
-
-  const { data: talkingTopicData } = useQuery(GET_TALKING_TOPIC);
-  const { data: closedTopicsData } = useQuery(GET_CLOSED_TOPICS);
+    loading: normalTopicsLoading,
+    error: normalTopicsError,
+    data: normalTopicsData,
+  } = useQuery(GET_NORMAL_TOPICS);
+  const {
+    loading: talkingTopicLoading,
+    error: talkingTopicError,
+    data: talkingTopicData,
+  } = useQuery(GET_TALKING_TOPIC);
+  const {
+    loading: closedTopicLoading,
+    error: closedTopicError,
+    data: closedTopicsData,
+  } = useQuery(GET_CLOSED_TOPICS);
 
   const [updateTopic] = useMutation(UPDATE_TOPIC, {
     refetchQueries: [
-      { query: GET_ALL_TOPICS },
+      { query: GET_NORMAL_TOPICS },
       { query: GET_TALKING_TOPIC },
       { query: GET_CLOSED_TOPICS },
     ],
+  });
+
+  const [deleteTopic] = useMutation(DELETE_TOPIC, {
+    refetchQueries: [{ query: GET_NORMAL_TOPICS }],
   });
 
   const handleTalking = async (topic) => {
@@ -62,9 +75,16 @@ const Index: React.FC = () => {
     }
   };
 
-  const handleDelete = () => {
-    alert("delete");
-    return;
+  const handleDelete = async (topic) => {
+    try {
+      await deleteTopic({
+        variables: {
+          id: topic.node.id,
+        },
+      });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -75,36 +95,25 @@ const Index: React.FC = () => {
         </div>
 
         <div className="flex">
-          <div className="w-2/3 bg-blue-200 flex flex-wrap">
-            {allTopicsLoading && <div className="text-9xl">Loading</div>}
-            {allTopicsError && (
-              <div className="text-3xl">{allTopicsError.message}</div>
+          <div className="w-2/3 bg-blue-200 flex flex-wrap min-h-full">
+            {normalTopicsLoading && <div className="text-9xl">Loading</div>}
+            {normalTopicsError && (
+              <div className="text-3xl">{normalTopicsError.message}</div>
             )}
-            {allTopicsData &&
-              allTopicsData.allTopics.edges.map((topic, index) => {
+            {normalTopicsData &&
+              normalTopicsData.allTopics.edges.map((topic, index) => {
                 return (
                   <div className="p-1 w-1/3" key={index}>
-                    <div className="border p-2">
-                      <div className="text-xl">{topic.node.title}</div>
-                      <div
-                        className={
-                          topic.node.isTalking
-                            ? "text-red-600"
-                            : "text-blue-600"
-                        }
-                      >
-                        isTalking: {String(topic.node.isTalking)}
-                      </div>
-                      <div
-                        className={
-                          topic.node.isClosed ? "text-red-600" : "text-blue-600"
-                        }
-                      >
-                        isClosed: {String(topic.node.isClosed)}
-                      </div>
+                    <div className="border p-2 h-52">
+                      <div className="text-lg">{topic.node.title}</div>
                       {isAdminLogin ? (
-                        <>
-                          <Button variant="contained" onClick={handleDelete}>
+                        <div>
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              handleDelete(topic);
+                            }}
+                          >
                             <DeleteForever />
                           </Button>
                           <Button
@@ -123,7 +132,7 @@ const Index: React.FC = () => {
                           >
                             <Chat />
                           </Button>
-                        </>
+                        </div>
                       ) : (
                         <div>AdminUser only</div>
                       )}
@@ -140,6 +149,16 @@ const Index: React.FC = () => {
                   return (
                     <div key={index}>
                       <h3 className="text-lg">{talkingTopic.node.title}</h3>
+                      <div>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            handleClosed(talkingTopic);
+                          }}
+                        >
+                          <Check />
+                        </Button>
+                      </div>
                     </div>
                   );
                 })}

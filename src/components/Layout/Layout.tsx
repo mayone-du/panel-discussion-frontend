@@ -2,24 +2,32 @@ import Link from "next/link";
 import { Button } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import { UserContext } from "src/contexts/UserContext";
-import { parseCookies } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { useContext, useEffect } from "react";
-import { REFRESH_TOKENS } from "src/apollo/queries";
+import { ALL_TOKEN_REFRESH } from "src/apollo/queries";
 
 export const Layout: React.FC<{ children: any }> = ({ children }) => {
   const { isAdminLogin, setIsAdminLogin } = useContext(UserContext);
 
-  const [refreshTokens] = useMutation(REFRESH_TOKENS);
+  const [allTokenRefresh] = useMutation(ALL_TOKEN_REFRESH);
 
   useEffect(() => {
     const cookies = parseCookies();
 
     if (cookies.refreshToken) {
       (async () => {
-        await refreshTokens({
+        const result = await allTokenRefresh({
           variables: {
             refreshToken: cookies.refreshToken,
           },
+        });
+        setCookie(null, "accessToken", result.data.refreshToken.token, {
+          path: "/",
+          maxAge: 60 * 60,
+        });
+        setCookie(null, "refreshToken", result.data.refreshToken.refreshToken, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
         });
         setIsAdminLogin(true);
       })();
@@ -47,7 +55,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
                 </Button>
               </Link>
             </li>
-            <li>ユーザー情報: {isAdminLogin ? 'AdminUser' : "ゲスト"}</li>
+            <li>ユーザー情報: {isAdminLogin ? "AdminUser" : "ゲスト"}</li>
           </ul>
         </nav>
       </header>

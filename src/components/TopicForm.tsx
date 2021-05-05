@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
-import { GET_ALL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
+import { GET_NORMAL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
 export const TopicForm: React.VFC = () => {
   const [topicTitle, setTopicTitle] = useState("");
@@ -12,7 +12,7 @@ export const TopicForm: React.VFC = () => {
   };
 
   const [createTopic] = useMutation(CREATE_TOPIC, {
-    refetchQueries: [{ query: GET_ALL_TOPICS }],
+    refetchQueries: [{ query: GET_NORMAL_TOPICS }],
   });
 
   const handleTopicCreate = async (e: React.ChangeEvent<HTMLFormElement>) => {
