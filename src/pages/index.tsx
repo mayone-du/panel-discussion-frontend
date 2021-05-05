@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
+import { DeleteForever, Check, Chat } from "@material-ui/icons";
 import { useContext } from "react";
 import { GET_ALL_TOPICS } from "src/apollo/queries";
 import { Layout } from "src/components/Layout/Layout";
@@ -8,7 +9,6 @@ import { UserContext } from "src/contexts/UserContext";
 import { UPDATE_TOPIC } from "src/apollo/queries";
 
 const Index: React.FC = () => {
-
   const { isAdminLogin } = useContext(UserContext);
 
   const {
@@ -36,9 +36,19 @@ const Index: React.FC = () => {
     }
   };
 
-  const handleClose = () => {
-    alert("close");
-    return;
+  const handleClosed = async (topic) => {
+    try {
+      await updateTopic({
+        variables: {
+          id: topic.node.id,
+          title: topic.node.title,
+          isTalking: false,
+          isClosed: !topic.node.isClosed,
+        },
+      });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleDelete = () => {
@@ -84,10 +94,15 @@ const Index: React.FC = () => {
                       {isAdminLogin ? (
                         <>
                           <Button variant="contained" onClick={handleDelete}>
-                            delete
+                            <DeleteForever />
                           </Button>
-                          <Button variant="contained" onClick={handleClose}>
-                            close
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              handleClosed(topic);
+                            }}
+                          >
+                            <Check />
                           </Button>
                           <Button
                             variant="contained"
@@ -95,7 +110,7 @@ const Index: React.FC = () => {
                               handleTalking(topic);
                             }}
                           >
-                            talking
+                            <Chat />
                           </Button>
                         </>
                       ) : (
