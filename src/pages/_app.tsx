@@ -29,17 +29,4 @@ const App: React.FC<{
   );
 };
 
-// export const getServerSideProps = async (context: NextPageContext) => {
-
-//   nookies.set(context, 'cookieName', 'value', {path: '/'})
-//   // Set
-//   // nookies.set(context, 'cookieName', 'value', {})
-
-//   // Destroy
-//   // nookies.destroy(ctx, 'cookieName')
-
-//   const cookies = nookies.get(context);
-
-//   return { props: cookies }
-// }
 export default App;

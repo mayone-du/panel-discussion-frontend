@@ -48,7 +48,7 @@ export const GET_NORMAL_TOPICS = gql`
   }
 `;
 
-export const GET_TALKING_TOPIC = gql`
+export const GET_TALKING_TOPICS = gql`
   query {
     allTopics(isTalking: true) {
       edges {

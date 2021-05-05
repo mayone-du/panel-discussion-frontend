@@ -1,10 +1,10 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { Button, CircularProgress } from "@material-ui/core";
 import { DeleteForever, Check, Chat } from "@material-ui/icons";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   GET_NORMAL_TOPICS,
-  GET_TALKING_TOPIC,
+  GET_TALKING_TOPICS,
   GET_CLOSED_TOPICS,
   UPDATE_TOPIC,
   DELETE_TOPIC,
@@ -12,9 +12,73 @@ import {
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
 import { UserContext } from "src/contexts/UserContext";
+import useSWR from "swr";
+import { request } from "graphql-request";
 
 const Index: React.FC = () => {
   const { isAdminLogin } = useContext(UserContext);
+
+  // SWRで通常、進行中、完了のすべての項目の最新情報を取得
+  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`;
+  const GET_NEW_NORMAL_TOPICS = `query {
+    allTopics(isTalking: false, isClosed: false) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }`;
+  const GET_NEW_TALKING_TOPICS = `query {
+    allTopics(isTalking: true) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }`;
+  const GET_NEW_CLOSED_TOPICS = `query {
+    allTopics(isClosed: true) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }`;
+
+  const fetcher = (query) => request(API_ENDPOINT, query);
+  const {
+    data: newNormalTopicsData,
+    error: newNormalTopicsError,
+    mutate: newNormalTopicMutate,
+  } = useSWR(GET_NEW_NORMAL_TOPICS, fetcher);
+  const {
+    data: newTalkingTopicsData,
+    error: newTalkingTopicsError,
+    mutate: newTalkingTopicsMutate,
+  } = useSWR(GET_NEW_TALKING_TOPICS, fetcher);
+  const {
+    data: newClosedTopicsData,
+    error: newClosedTopicsError,
+    mutate: newClosedTopicsMutate,
+  } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher);
+
+  const allMutate = () => {
+    newNormalTopicMutate();
+    newTalkingTopicsMutate();
+    newClosedTopicsMutate();
+  };
 
   // 話題を項目ごとにすべて取得するQuery
   const {
@@ -23,10 +87,10 @@ const Index: React.FC = () => {
     data: normalTopicsData,
   } = useQuery(GET_NORMAL_TOPICS);
   const {
-    loading: talkingTopicLoading,
-    error: talkingTopicError,
-    data: talkingTopicData,
-  } = useQuery(GET_TALKING_TOPIC);
+    loading: talkingTopicsLoading,
+    error: talkingTopicsError,
+    data: talkingTopicsData,
+  } = useQuery(GET_TALKING_TOPICS);
   const {
     loading: closedTopicLoading,
     error: closedTopicError,
@@ -37,7 +101,7 @@ const Index: React.FC = () => {
   const [updateTopic] = useMutation(UPDATE_TOPIC, {
     refetchQueries: [
       { query: GET_NORMAL_TOPICS },
-      { query: GET_TALKING_TOPIC },
+      { query: GET_TALKING_TOPICS },
       { query: GET_CLOSED_TOPICS },
     ],
   });
@@ -46,7 +110,7 @@ const Index: React.FC = () => {
   const [deleteTopic] = useMutation(DELETE_TOPIC, {
     refetchQueries: [
       { query: GET_NORMAL_TOPICS },
-      { query: GET_TALKING_TOPIC },
+      { query: GET_TALKING_TOPICS },
       { query: GET_CLOSED_TOPICS },
     ],
   });
@@ -62,6 +126,7 @@ const Index: React.FC = () => {
           isClosed: false,
         },
       });
+      allMutate();
     } catch (error) {
       alert(error);
     }
@@ -78,6 +143,7 @@ const Index: React.FC = () => {
           isClosed: !topic.node.isClosed,
         },
       });
+      allMutate();
     } catch (error) {
       alert(error);
     }
@@ -91,16 +157,21 @@ const Index: React.FC = () => {
           id: topic.node.id,
         },
       });
+      allMutate();
     } catch (error) {
       alert(error);
     }
   };
 
+  useEffect(() => {
+    allMutate();
+  }, []);
+
   return (
     <>
       <Layout>
         <div className="flex justify-center py-4">
-          <TopicForm />
+          <TopicForm allMutate={allMutate} />
         </div>
 
         <div className="flex">
@@ -122,22 +193,22 @@ const Index: React.FC = () => {
               )}
 
               {/* 正常時 */}
-              {normalTopicsData &&
-                normalTopicsData.allTopics.edges.map((topic, index) => {
+              {newNormalTopicsData &&
+                newNormalTopicsData.allTopics.edges.map((topic, index) => {
                   return (
                     <div className="p-1 w-1/3" key={index}>
                       <div className="border rounded p-2 shadow-sm bg-gray-50 h-40 flex flex-col justify-between overflow-y-scroll">
                         <div className="text-lg">{topic.node.title}</div>
                         {isAdminLogin ? (
-                          <div className='flex justify-around'>
+                          <div className="flex justify-around">
                             <Button
                               variant="contained"
                               onClick={() => {
                                 handleDelete(topic);
                               }}
                             >
-                              削除<DeleteForever />
-
+                              削除
+                              <DeleteForever />
                             </Button>
                             <Button
                               variant="contained"
@@ -145,7 +216,8 @@ const Index: React.FC = () => {
                                 handleClosed(topic);
                               }}
                             >
-                              終了<Check />
+                              終了
+                              <Check />
                             </Button>
                             <Button
                               variant="contained"
@@ -153,7 +225,8 @@ const Index: React.FC = () => {
                                 handleTalking(topic);
                               }}
                             >
-                              話す<Chat />
+                              話す
+                              <Chat />
                             </Button>
                           </div>
                         ) : (
@@ -174,38 +247,44 @@ const Index: React.FC = () => {
               </h2>
 
               {/* ローディング中 */}
-              {talkingTopicLoading && (
+              {talkingTopicsLoading && (
                 <div>
                   <CircularProgress />
                 </div>
               )}
 
               {/* エラー時 */}
-              {talkingTopicError && (
-                <div className="text-3xl">{talkingTopicError}</div>
+              {talkingTopicsError && (
+                <div className="text-3xl">{talkingTopicsError}</div>
               )}
 
               {/* 正常時 */}
-              {talkingTopicData &&
-                talkingTopicData.allTopics.edges.map((talkingTopic, index) => {
-                  return (
-                    <div className="border rounded p-2" key={index}>
-                      <h3 className="text-xl font-bold pb-2">
-                        {talkingTopic.node.title}
-                      </h3>
-                      <div>
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            handleClosed(talkingTopic);
-                          }}
-                        >
-                          終了<Check />
-                        </Button>
+              {newTalkingTopicsData &&
+                newTalkingTopicsData.allTopics.edges.map(
+                  (talkingTopic, index) => {
+                    return (
+                      <div
+                        className="border bg-gray-50 rounded p-2"
+                        key={index}
+                      >
+                        <h3 className="text-xl font-bold pb-2">
+                          {talkingTopic.node.title}
+                        </h3>
+                        <div>
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              handleClosed(talkingTopic);
+                            }}
+                          >
+                            終了
+                            <Check />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
             </div>
 
             {/* 話し終えた話題の欄 */}
@@ -227,24 +306,27 @@ const Index: React.FC = () => {
               )}
 
               {/* 正常時 */}
-              {closedTopicsData &&
-                closedTopicsData.allTopics.edges.map((closedTopic, index) => {
-                  return (
-                    <div className="border p-2 my-2" key={index}>
-                      <h3 className="text-lg">{closedTopic.node.title}</h3>
-                      <div>
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            handleDelete(closedTopic);
-                          }}
-                        >
-                          削除<DeleteForever />
-                        </Button>
+              {newClosedTopicsData &&
+                newClosedTopicsData.allTopics.edges.map(
+                  (closedTopic, index) => {
+                    return (
+                      <div className="border bg-gray-50 p-2 my-2" key={index}>
+                        <h3 className="text-lg">{closedTopic.node.title}</h3>
+                        <div>
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              handleDelete(closedTopic);
+                            }}
+                          >
+                            削除
+                            <DeleteForever />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
             </div>
           </div>
         </div>
