@@ -6,7 +6,7 @@ const Auth: React.FC = () => {
   return (
     <>
       <Layout>
-        <h1>auth</h1>
+        <h1 className='text-3xl text-center font-bold py-8'>管理者ログイン画面</h1>
         <AuthForm />
       </Layout>
     </>

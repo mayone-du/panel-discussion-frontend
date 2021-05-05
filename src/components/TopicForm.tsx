@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
+import {Add} from '@material-ui/icons';
 import React, { useState } from "react";
 import { GET_NORMAL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
@@ -41,19 +42,22 @@ export const TopicForm: React.VFC = () => {
 
   return (
     <>
-      <form onSubmit={handleTopicCreate} className="flex items-center">
-        <div>
+      <form onSubmit={handleTopicCreate} className="flex items-center justify-center w-full">
+        <div className='mx-4 w-1/3'>
           <TextField
             type="text"
             value={topicTitle}
             onChange={handleTitleChange}
             variant="outlined"
-            placeholder="話題を入力"
+            label='話すお題を入力してください。（例: 起業のきっかけ、etc...）'
+            size="medium"
+            className='w-full'
           />
         </div>
         <div>
-          <Button type="submit" variant="outlined">
-            作成
+          <Button size="large" type="submit" variant="outlined">
+            <span className='mx-2'>作成する</span>
+            <Add />
           </Button>
         </div>
       </form>

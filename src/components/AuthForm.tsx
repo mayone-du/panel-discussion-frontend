@@ -43,14 +43,19 @@ export const AuthForm: React.VFC = () => {
         },
       });
       result.data &&
-        await setCookie(null, "accessToken", result.data.tokenAuth.token, {
+        (await setCookie(null, "accessToken", result.data.tokenAuth.token, {
           path: "/",
           maxAge: 60 * 60,
-        });
-      await setCookie(null, "refreshToken", result.data.tokenAuth.refreshToken, {
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+        }));
+      await setCookie(
+        null,
+        "refreshToken",
+        result.data.tokenAuth.refreshToken,
+        {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        }
+      );
       await setIsAdminLogin(true);
       await setUsername("");
       await setPassword("");
@@ -72,43 +77,45 @@ export const AuthForm: React.VFC = () => {
   return (
     <>
       <form onSubmit={handleLogin}>
-        <div>
+        <div className="flex justify-center pb-8">
           <TextField
             type="text"
             variant="outlined"
             value={username}
             onChange={handleNameChange}
-            placeholder="ユーザーネーム"
+            label="ユーザーネーム"
+            className="w-1/3"
           />
         </div>
-        <div>
+        <div className="flex justify-center pb-8">
           <TextField
             type="password"
             variant="outlined"
             value={password}
             onChange={handlePasswordChange}
-            placeholder="パスワード"
+            label="パスワード"
+            helperText="事前にまよねーづから渡されたパスワードを入力してください。"
+            className="w-1/3"
           />
         </div>
 
-        <div>
+        <div className="flex justify-center pb-8">
           <Button type="submit" variant="contained">
             ログイン
           </Button>
         </div>
+        {isAdminLogin && (
+          <div className="flex justify-center pb-8">
+            <Button
+              onClick={handleLogout}
+              variant="contained"
+              color="secondary"
+            >
+              ログアウト
+            </Button>
+          </div>
+        )}
       </form>
-
-      {isAdminLogin && (
-        <div>
-          <Button
-            onClick={handleLogout}
-            variant="contained"
-            color="secondary"
-          >
-            LOGOUT
-          </Button>
-        </div>
-      )}
     </>
   );
 };

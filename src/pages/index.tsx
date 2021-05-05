@@ -44,7 +44,11 @@ const Index: React.FC = () => {
 
   // 話題を削除するMutation
   const [deleteTopic] = useMutation(DELETE_TOPIC, {
-    refetchQueries: [{ query: GET_NORMAL_TOPICS }],
+    refetchQueries: [
+      { query: GET_NORMAL_TOPICS },
+      { query: GET_TALKING_TOPIC },
+      { query: GET_CLOSED_TOPICS },
+    ],
   });
 
   // 進行中の話題にするボタンを押したときの処理
@@ -101,65 +105,73 @@ const Index: React.FC = () => {
 
         <div className="flex">
           {/* 新規作成された話題の欄 */}
-          <div className="w-2/3 bg-blue-200 flex flex-wrap min-h-full">
-            {/* ローディング中 */}
-            {normalTopicsLoading && (
-              <div>
-                <CircularProgress />
-              </div>
-            )}
+          <div className="w-2/3 border rounded shadow bg-gray-100 m-2">
+            <h2 className="text-3xl text-center pt-2 pb-4 font-bold">Topics</h2>
 
-            {/* エラー時 */}
-            {normalTopicsError && (
-              <div className="text-3xl">{normalTopicsError}</div>
-            )}
+            <div className="flex flex-wrap">
+              {/* ローディング中 */}
+              {normalTopicsLoading && (
+                <div>
+                  <CircularProgress />
+                </div>
+              )}
 
-            {/* 正常時 */}
-            {normalTopicsData &&
-              normalTopicsData.allTopics.edges.map((topic, index) => {
-                return (
-                  <div className="p-1 w-1/3" key={index}>
-                    <div className="border p-2 h-52">
-                      <div className="text-lg">{topic.node.title}</div>
-                      {isAdminLogin ? (
-                        <div>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              handleDelete(topic);
-                            }}
-                          >
-                            <DeleteForever />
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              handleClosed(topic);
-                            }}
-                          >
-                            <Check />
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              handleTalking(topic);
-                            }}
-                          >
-                            <Chat />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div>AdminUser only</div>
-                      )}
+              {/* エラー時 */}
+              {normalTopicsError && (
+                <div className="text-3xl">{normalTopicsError}</div>
+              )}
+
+              {/* 正常時 */}
+              {normalTopicsData &&
+                normalTopicsData.allTopics.edges.map((topic, index) => {
+                  return (
+                    <div className="p-1 w-1/3" key={index}>
+                      <div className="border rounded p-2 shadow-sm bg-gray-50 h-40 flex flex-col justify-between overflow-y-scroll">
+                        <div className="text-lg">{topic.node.title}</div>
+                        {isAdminLogin ? (
+                          <div className='flex justify-around'>
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                handleDelete(topic);
+                              }}
+                            >
+                              削除<DeleteForever />
+
+                            </Button>
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                handleClosed(topic);
+                              }}
+                            >
+                              終了<Check />
+                            </Button>
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                handleTalking(topic);
+                              }}
+                            >
+                              話す<Chat />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div>AdminUser only</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+            </div>
           </div>
+
           <div className="w-1/3">
             {/* 現在の話題 */}
-            <div className="bg-red-200">
-              <h2 className="text-xl text-center py-2">Talking</h2>
+            <div className="pt-2 pb-4 px-2 m-2 shadow mb-4 border rounded bg-gray-100">
+              <h2 className="text-3xl text-center pt-2 pb-4 font-bold">
+                Talking
+              </h2>
 
               {/* ローディング中 */}
               {talkingTopicLoading && (
@@ -177,8 +189,10 @@ const Index: React.FC = () => {
               {talkingTopicData &&
                 talkingTopicData.allTopics.edges.map((talkingTopic, index) => {
                   return (
-                    <div key={index}>
-                      <h3 className="text-lg">{talkingTopic.node.title}</h3>
+                    <div className="border rounded p-2" key={index}>
+                      <h3 className="text-xl font-bold pb-2">
+                        {talkingTopic.node.title}
+                      </h3>
                       <div>
                         <Button
                           variant="contained"
@@ -186,7 +200,7 @@ const Index: React.FC = () => {
                             handleClosed(talkingTopic);
                           }}
                         >
-                          <Check />
+                          終了<Check />
                         </Button>
                       </div>
                     </div>
@@ -195,8 +209,10 @@ const Index: React.FC = () => {
             </div>
 
             {/* 話し終えた話題の欄 */}
-            <div className="bg-green-200">
-              <h2 className="text-xl text-center py-2">Closed</h2>
+            <div className="pt-2 pb-4 px-2 m-2 shadow mb-4 border rounded bg-gray-100">
+              <h2 className="text-3xl text-center pt-2 pb-4 font-bold">
+                Closed
+              </h2>
 
               {/* ローディング中 */}
               {closedTopicLoading && (
@@ -214,8 +230,18 @@ const Index: React.FC = () => {
               {closedTopicsData &&
                 closedTopicsData.allTopics.edges.map((closedTopic, index) => {
                   return (
-                    <div key={index}>
+                    <div className="border p-2 my-2" key={index}>
                       <h3 className="text-lg">{closedTopic.node.title}</h3>
+                      <div>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            handleDelete(closedTopic);
+                          }}
+                        >
+                          削除<DeleteForever />
+                        </Button>
+                      </div>
                     </div>
                   );
                 })}
