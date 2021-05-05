@@ -1,34 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# サロンのパネルディスカッションアプリ(フロントエンド)
 
-## Getting Started
+## 概要
 
-First, run the development server:
+現在参加しているオンラインサロンで、パネルディスカッションの際に使うためのアプリを開発した。
+要件や使用技術は以下の通り。
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## フロントエンド
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- TypeScript
+- Next.js
+- Vercel
+- Apollo Client
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## バックエンド
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- Django
+- Graphene-Django（GraphQL）
+- Heroku
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+詳しくはバックエンドのリポジトリへ
 
-## Learn More
+## 求められた要件
 
-To learn more about Next.js, take a look at the following resources:
+- ログイン無しで誰でもお題を投稿できる（簡単なテキストエリアがあり、そこから投稿）
+- お題を一覧で見ることができる（パネルディスカッション時に画面共有で皆にお題をお見せしながら話を進める想定）
+- お題にはチェックマークをつけられる（話し終えたお題・話し中のお題・まだのお題を確認できる）
+- アドミンはログインしてお題を削除することができる（被りお題などを削除したいため）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### 必要ではないが、余裕があったら勉強がてら作りたい機能
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- 検索やページネーション、フィルター
+- チャットページ
 
-## Deploy on Vercel
+## 実装できた機能
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ログイン / ログアウト(JWT を cookie へ保存)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+  - AdminUser 用のログインページ（モーダルもあり）を作り、パスワードを入力して AdminUser としてログインできる
+  - ログイン情報は DM で直接わたして、ログインしてもらう
+
+- 話題の CRUD
+  - AdminUser のみ、進行中のチェックや削除ができる
+  - 話題は多くなるかもなので、更新時などの確認などは無し。
+- 項目ごとの最新情報の取得(SWR)
+
+## こだわった点
+
+時間がなかったけど、できる限りリファクタリングやコメントアウトなどを丁寧にした。
+UI はシンプルで見やすくを意識した。
+なるべくモダンな技術で実装した。
+
+## 苦労した点
+
+認証周りでとにかく躓いた。トークンの保管場所や方法、リフレッシュするタイミングなど、考えることが多く苦労した。
+あとは最新情報の取得など。
+スタイリングに関してはあまり時間をかけたくなかったため、レスポンシブ対応はしてません。
+
+## 最後に
+
+フロントエンドもバックエンドも一人で全てやってみたくて、簡単な機能だけどとても学びになったし、開発しててめちゃくちゃ楽しかった。
+まだまだ学習中ですので、ここはこうしたほうがいいよとか、ご意見・アドバイス等ありましたら優しく教えてもらえると嬉しいです。
+
+最後までご覧いただきありがとうございました。
