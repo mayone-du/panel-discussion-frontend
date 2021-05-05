@@ -84,7 +84,7 @@ export const AuthForm: React.VFC = () => {
             value={username}
             onChange={handleNameChange}
             label="ユーザーネーム"
-            className="w-1/3"
+            className="md:w-1/3"
           />
         </div>
         <div className="flex justify-center pb-8">
@@ -95,26 +95,28 @@ export const AuthForm: React.VFC = () => {
             onChange={handlePasswordChange}
             label="パスワード"
             helperText="事前にまよねーづから渡されたパスワードを入力してください。"
-            className="w-1/3"
+            className="md:w-1/3"
           />
         </div>
 
-        <div className="flex justify-center pb-8">
-          <Button type="submit" variant="contained">
-            ログイン
-          </Button>
-        </div>
-        {isAdminLogin && (
-          <div className="flex justify-center pb-8">
-            <Button
-              onClick={handleLogout}
-              variant="contained"
-              color="secondary"
-            >
-              ログアウト
+        <div className="flex justify-center my-8">
+          <div className="flex justify-center pb-8 mx-4">
+            <Button type="submit" color="primary" variant="contained">
+              ログイン
             </Button>
           </div>
-        )}
+          {isAdminLogin && (
+            <div className="flex justify-center pb-8 mx-4">
+              <Button
+                onClick={handleLogout}
+                variant="contained"
+                color="secondary"
+              >
+                ログアウト
+              </Button>
+            </div>
+          )}
+        </div>
       </form>
     </>
   );

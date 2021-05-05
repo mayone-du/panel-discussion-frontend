@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@material-ui/core";
+import { AccountCircle } from "@material-ui/icons";
 import { useMutation } from "@apollo/client";
 import { UserContext } from "src/contexts/UserContext";
 import { parseCookies, setCookie } from "nookies";
 import { useContext, useEffect } from "react";
 import { ALL_TOKEN_REFRESH } from "src/apollo/queries";
-
 
 // すべてのページで呼ばれるコンポーネント
 export const Layout: React.FC<{ children: any }> = ({ children }) => {
@@ -43,32 +43,77 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
 
   return (
     <>
-      <header className="p-2 bg-gray-50">
-        <nav>
-          <ul className="flex items-center justify-center">
-            <li className="m-4">
-              <Link href="/">
-                <Button variant="contained" color="primary">
-                  HOME
-                </Button>
-              </Link>
-            </li>
-            <li className="m-4">
-              <Link href="/auth">
-                <Button variant="contained" color="primary">
-                  管理者ログイン
-                </Button>
-              </Link>
-            </li>
-            <li>ユーザー情報: {isAdminLogin ? "AdminUser" : "ゲスト"}</li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <article>
-          <section className="px-20">{children}</section>
-        </article>
-      </main>
+      <div className="overflow-x-hidden">
+        <header className="p-2 bg-gray-50 shadow">
+          <nav className="flex justify-between items-center md:mx-20 w-full">
+            <h2 className="font-bold md:text-4xl text-xl md:w-1/3">
+              {/* <img src="/images/logo.png" alt="" /> */}
+              Qin
+            </h2>
+            <p className="md:w-1/3 md:text-base text-sm md:text-left text-center">
+              <span className="md:text-xl font-bold md:inline block">
+                <a
+                  className="mx-2 border-b border-gray-600"
+                  href="https://twitter.com/shimabu_it"
+                >
+                  しまぶー
+                </a>
+                ✖
+                <a
+                  className="mx-2 border-b border-gray-600"
+                  href="https://twitter.com/bb_ja_k"
+                >
+                  じゃけぇ
+                </a>
+              </span>
+              によるパネルディスカッション🥳
+            </p>
+            <ul className="md:flex md:text-left text-center items-center justify-center md:w-1/3">
+              <li className="my-4 mx-2">
+                <Link href="/">
+                  <Button variant="contained" color="default">
+                    HOME
+                  </Button>
+                </Link>
+              </li>
+              <li className="my-4 mx-2">
+                <Link href="/auth">
+                  <Button variant="contained" color="default">
+                    ログイン
+                  </Button>
+                </Link>
+              </li>
+              <li className="my-4 mx-2">
+                {isAdminLogin ? (
+                  <div className="text-center">
+                    <AccountCircle color="primary" />
+                    <p className="text-xs text-blue-800">Admin</p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <AccountCircle />
+                    <p className="text-xs">Guest</p>
+                  </div>
+                )}
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <main>
+          <article>
+            <section className="md:px-20 px-2">{children}</section>
+          </article>
+        </main>
+        <footer className="py-6 px-4 mt-20 bg-black">
+          <p className="text-white text-center">
+            Developed by{" "}
+            <a className="underline" href="https://twitter.com/mayo1201blog">
+              まよねーづ
+            </a>{" "}
+            :{")"}
+          </p>
+        </footer>
+      </div>
     </>
   );
 };

@@ -1,12 +1,24 @@
 import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@material-ui/core";
-import {Add} from '@material-ui/icons';
-import React, { useState } from "react";
+import { Create } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 import { GET_NORMAL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
-export const TopicForm: React.VFC<any> = ({allMutate}) => {
+export const TopicForm: React.VFC<any> = ({ allMutate }) => {
   // 話題のタイトル入力欄のvalueをstateとして保持
   const [topicTitle, setTopicTitle] = useState("");
+  const [inputStatus, setInputStatus] = useState<"normal" | "danger" | "error">(
+    "normal"
+  );
+
+  useEffect(() => {
+    if (topicTitle.length >= 201) {
+      setInputStatus("error");
+    } else {
+      setInputStatus("normal");
+    }
+  }, [topicTitle]);
+
   const handleTitleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -21,7 +33,10 @@ export const TopicForm: React.VFC<any> = ({allMutate}) => {
   // 話題の作成ボタンが押されたときの処理
   const handleTopicCreate = async (e: React.ChangeEvent<HTMLFormElement>) => {
     await e.preventDefault();
-
+    if (inputStatus === "error") {
+      alert("200文字までで入力してください。");
+      return;
+    }
     // 話題が入力されていたら作成
     if (topicTitle) {
       try {
@@ -43,22 +58,33 @@ export const TopicForm: React.VFC<any> = ({allMutate}) => {
 
   return (
     <>
-      <form onSubmit={handleTopicCreate} className="flex items-center justify-center w-full">
-        <div className='mx-4 w-1/3'>
+      <form
+        onSubmit={handleTopicCreate}
+        className="md:flex items-center justify-center w-full"
+      >
+        <div className="md:mx-4 mx-2 my-2 md:w-1/3">
           <TextField
             type="text"
             value={topicTitle}
             onChange={handleTitleChange}
             variant="outlined"
-            label='お題を入力してください。（例: 起業のきっかけ、etc...）'
+            label="話題を入力（例: 起業のきっかけ、etc...）"
             size="medium"
-            className='w-full'
+            className="w-full"
+            color={
+              inputStatus === "normal"
+                ? "primary"
+                : inputStatus === "error"
+                ? "secondary"
+                : null
+            }
+            helperText={`${topicTitle.length} / 200`}
           />
         </div>
-        <div>
-          <Button size="large" type="submit" variant="outlined">
-            <span className='mx-2'>作成する</span>
-            <Add />
+        <div className="md:block flex justify-center pt-2 md:pt-0">
+          <Button size="large" color="primary" type="submit" variant="outlined">
+            <span className="mx-2 font-bold">投稿する</span>
+            <Create color="primary" />
           </Button>
         </div>
       </form>

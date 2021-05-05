@@ -8,9 +8,9 @@ import { NextPageContext } from "next";
 const App: React.FC<{
   Component: any;
   pageProps: any;
-  ctx: NextPageContext;
-}> = ({ Component, pageProps, ctx }) => {
-  const cookies = nookies.get(ctx);
+  context: NextPageContext;
+}> = ({ Component, pageProps, context }) => {
+  const cookies = nookies.get(context);
 
   const client = new ApolloClient({
     uri: `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`,
