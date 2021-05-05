@@ -49,6 +49,23 @@ export const GET_TALKING_TOPIC = gql`
   }
 `;
 
+export const GET_CLOSED_TOPICS = gql`
+  query {
+    allTopics(isClosed: true) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }
+`;
+
+
+
 
 export const CREATE_TOPIC = gql`
   mutation($title: String!) {

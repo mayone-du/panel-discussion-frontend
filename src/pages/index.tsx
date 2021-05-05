@@ -2,11 +2,15 @@ import { useQuery, useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
 import { DeleteForever, Check, Chat } from "@material-ui/icons";
 import { useContext } from "react";
-import { GET_ALL_TOPICS, GET_TALKING_TOPIC } from "src/apollo/queries";
+import {
+  GET_ALL_TOPICS,
+  GET_TALKING_TOPIC,
+  GET_CLOSED_TOPICS,
+  UPDATE_TOPIC,
+} from "src/apollo/queries";
 import { Layout } from "src/components/Layout/Layout";
 import { TopicForm } from "src/components/TopicForm";
 import { UserContext } from "src/contexts/UserContext";
-import { UPDATE_TOPIC } from "src/apollo/queries";
 
 const Index: React.FC = () => {
   const { isAdminLogin } = useContext(UserContext);
@@ -18,9 +22,14 @@ const Index: React.FC = () => {
   } = useQuery(GET_ALL_TOPICS);
 
   const { data: talkingTopicData } = useQuery(GET_TALKING_TOPIC);
+  const { data: closedTopicsData } = useQuery(GET_CLOSED_TOPICS);
 
   const [updateTopic] = useMutation(UPDATE_TOPIC, {
-    refetchQueries: [{ query: GET_ALL_TOPICS }, { query: GET_TALKING_TOPIC }],
+    refetchQueries: [
+      { query: GET_ALL_TOPICS },
+      { query: GET_TALKING_TOPIC },
+      { query: GET_CLOSED_TOPICS },
+    ],
   });
 
   const handleTalking = async (topic) => {
@@ -136,8 +145,15 @@ const Index: React.FC = () => {
                 })}
             </div>
             <div className="bg-green-200">
-              <h2 className="text-xl text-center py-2">Closed</h2>
-              <h3 className="text-lg">fooooooo</h3>
+              <h2 className="text-xl text-center py-2">Closed</h2>{" "}
+              {closedTopicsData &&
+                closedTopicsData.allTopics.edges.map((closedTopic, index) => {
+                  return (
+                    <div key={index}>
+                      <h3 className="text-lg">{closedTopic.node.title}</h3>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
