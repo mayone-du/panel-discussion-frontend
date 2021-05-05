@@ -33,6 +33,23 @@ export const GET_ALL_TOPICS = gql`
   }
 `;
 
+
+export const GET_TALKING_TOPIC = gql`
+  query {
+    allTopics(isTalking: true) {
+      edges {
+        node {
+          id
+          title
+          isTalking
+          isClosed
+        }
+      }
+    }
+  }
+`;
+
+
 export const CREATE_TOPIC = gql`
   mutation($title: String!) {
     createTopic(input: { title: $title }) {
