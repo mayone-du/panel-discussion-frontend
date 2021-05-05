@@ -14,6 +14,7 @@ export const AuthForm: React.VFC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // ユーザーネームの入力欄が変更されたときの処理
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setUsername(e.target.value);
@@ -21,6 +22,7 @@ export const AuthForm: React.VFC = () => {
     []
   );
 
+  // パスワードの入力欄が変更されたときの処理
   const handlePasswordChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
@@ -28,8 +30,11 @@ export const AuthForm: React.VFC = () => {
     []
   );
 
+  // ログインボタンが押されたときの処理
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    await e.preventDefault();
+
+    // Tokenを2つとも取得してCookieにセットする
     try {
       const result = await getTokens({
         variables: {
@@ -38,24 +43,26 @@ export const AuthForm: React.VFC = () => {
         },
       });
       result.data &&
-        setCookie(null, "accessToken", result.data.tokenAuth.token, {
+        await setCookie(null, "accessToken", result.data.tokenAuth.token, {
           path: "/",
           maxAge: 60 * 60,
         });
-      setCookie(null, "refreshToken", result.data.tokenAuth.refreshToken, {
+      await setCookie(null, "refreshToken", result.data.tokenAuth.refreshToken, {
         path: "/",
         maxAge: 60 * 60 * 24 * 7,
       });
-      setIsAdminLogin(true);
-      setUsername("");
-      setPassword("");
+      await setIsAdminLogin(true);
+      await setUsername("");
+      await setPassword("");
 
+      // トップページに遷移
       router.push("/");
     } catch (error) {
       alert(error);
     }
   };
 
+  // ログアウトボタンが押されたときにCookieのTokenを2つとも削除
   const handleLogout = async () => {
     destroyCookie(null, "accessToken");
     destroyCookie(null, "refreshToken");

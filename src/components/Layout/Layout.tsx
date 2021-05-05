@@ -6,14 +6,18 @@ import { parseCookies, setCookie } from "nookies";
 import { useContext, useEffect } from "react";
 import { ALL_TOKEN_REFRESH } from "src/apollo/queries";
 
+
+// すべてのページで呼ばれるコンポーネント
 export const Layout: React.FC<{ children: any }> = ({ children }) => {
   const { isAdminLogin, setIsAdminLogin } = useContext(UserContext);
 
+  // refreshTokenによってトークンを2つとも更新するMutation
   const [allTokenRefresh] = useMutation(ALL_TOKEN_REFRESH);
 
   useEffect(() => {
+    // Cookieをすべて取得
     const cookies = parseCookies();
-
+    // refreshTokenがあった場合はTokenをどちらも更新
     if (cookies.refreshToken) {
       (async () => {
         const result = await allTokenRefresh({
@@ -32,7 +36,8 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
         setIsAdminLogin(true);
       })();
     } else {
-      console.log("Token is None");
+      setIsAdminLogin(false);
+      console.log("Token is None.");
     }
   }, []);
 
