@@ -58,8 +58,8 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
   return (
     <>
       <div className="overflow-x-hidden">
-        <header className="p-2 bg-gray-50 shadow">
-          <nav className="flex justify-between items-center md:mx-16 w-full">
+        <header className="py-2 md:px-16 bg-gray-50 shadow w-full">
+          <nav className="flex items-center w-full">
             <h2 className="font-bold md:text-4xl text-xl md:w-1/3">
               {/* <img src="/images/logo.png" alt="" /> */}
               Qin
@@ -80,7 +80,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
               </span>
               によるパネルディスカッション🥳
             </p>
-            <ul className="md:flex md:text-left text-center items-center justify-center md:w-1/3">
+            <ul className="md:flex md:text-left text-center items-center justify-end md:w-1/3">
               <li className="my-4 mx-2">
                 <Link href="/">
                   <Button variant="contained" color="default">
