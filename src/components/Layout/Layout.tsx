@@ -66,10 +66,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
             </h2>
             <p className="md:w-1/3 md:text-base text-sm md:text-left text-center">
               <span className="md:text-xl font-bold md:inline block">
-                <a
-                  className="mx-2"
-                  href="https://twitter.com/shimabu_it"
-                >
+                <a className="mx-2" href="https://twitter.com/shimabu_it">
                   しまぶー
                 </a>
                 ✖

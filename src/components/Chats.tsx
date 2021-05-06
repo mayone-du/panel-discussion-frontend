@@ -47,7 +47,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
 
   const handleCommentCreate = async () => {
     if (commentText === "") {
-      alert("文字を入力してください。");
+      await alert("文字を入力してください。");
       return;
     } else {
       try {
@@ -57,8 +57,8 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
             nickname: nickname,
           },
         });
-        allMutate();
-        setCommentText("");
+        await allMutate();
+        await setCommentText("");
       } catch (error) {
         alert(error);
       }
@@ -68,7 +68,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
   return (
     <>
       <div className="md:w-1/2">
-        <div className="w-full h-full max-h-screen bg-gray-100 pt-2 m-2 border rounded shadow">
+        <div className="max-h-screen bg-gray-100 pt-2 m-2 border rounded shadow">
           <p className="text-center text-sm pt-2">チャット</p>
 
           <h2 className="text-3xl text-center pb-4 font-bold">Chat</h2>
@@ -110,7 +110,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-center w-full mt-2">
+          <div className="flex items-center justify-center w-full mt-2 pb-4">
             <div className="w-4/5 bg-white">
               <TextField
                 variant="outlined"
