@@ -4,7 +4,9 @@ import { Create } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { GET_NORMAL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
-export const TopicForm: React.VFC<any> = ({ allMutate }) => {
+export const TopicForm: React.VFC<{ allMutate: Function }> = ({
+  allMutate,
+}) => {
   // 話題のタイトル入力欄のvalueをstateとして保持
   const [topicTitle, setTopicTitle] = useState("");
   const [inputStatus, setInputStatus] = useState<"normal" | "danger" | "error">(
@@ -71,14 +73,12 @@ export const TopicForm: React.VFC<any> = ({ allMutate }) => {
             label="話題を入力（例: 起業のきっかけ、etc...）"
             size="medium"
             className="w-full"
-            color={
-              inputStatus === "normal"
-                ? "primary"
-                : inputStatus === "error"
-                ? "secondary"
-                : null
+            error={inputStatus === "error"}
+            helperText={
+              inputStatus === "error"
+                ? `${topicTitle.length} / 200 話題は200文字までで入力してください。`
+                : `${topicTitle.length} / 200`
             }
-            helperText={`${topicTitle.length} / 200`}
           />
         </div>
         <div className="md:block flex justify-center pt-2 md:pt-0">
