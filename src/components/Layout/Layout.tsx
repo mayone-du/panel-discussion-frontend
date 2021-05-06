@@ -61,6 +61,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
                 ✖
                 <a
                   className="mx-2 border-b border-gray-600"
+                  style={{ color: "#0E6163" }}
                   href="https://twitter.com/bb_ja_k"
                 >
                   じゃけぇ
