@@ -10,10 +10,10 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
   const [commentText, setCommentText] = useState("");
   const [nickname, setNickname] = useState("");
 
-  const handleCommentChange = (e) => {
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(e.target.value);
   };
-  const handleNicknameChange = (e) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
@@ -51,7 +51,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
       return;
     } else {
       try {
-        createComment({
+        await createComment({
           variables: {
             text: commentText,
             nickname: nickname,
