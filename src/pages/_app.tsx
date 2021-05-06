@@ -13,8 +13,7 @@ const App: React.FC<{
   const cookies = nookies.get(context);
 
   const client = new ApolloClient({
-    uri: `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`,
-    // uri: `${process.env.API_ENDPOINT}graphql/`,
+    uri: `${process.env.API_ENDPOINT}`,
     headers: {
       authorization: cookies.accessToken ? `JWT ${cookies.accessToken}` : "",
     },
