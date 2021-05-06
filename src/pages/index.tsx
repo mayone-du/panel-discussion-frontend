@@ -6,6 +6,7 @@ import { request } from "graphql-request";
 import { NormalTopics } from "src/components/Topics/NormalTopics";
 import { TalkingTopics } from "src/components/Topics/TalkingTopics";
 import { ClosedTopics } from "src/components/Topics/ClosedTopics";
+import { Chats } from "src/components/Chats";
 
 const Index: React.FC = () => {
   // SWRで通常、進行中、完了のすべての項目の最新情報を取得
@@ -49,6 +50,18 @@ const Index: React.FC = () => {
       }
     }
   }`;
+  const GET_NEW_ALL_COMMENTS = `query {
+    allComments {
+      edges {
+        node {
+          id
+          text
+          nickname
+          createdAt
+        }
+      }
+    }
+  }`;
 
   const fetcher = (query) => request(API_ENDPOINT, query);
   const {
@@ -66,11 +79,17 @@ const Index: React.FC = () => {
     // error: newClosedTopicsError,
     mutate: newClosedTopicsMutate,
   } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher);
+  const {
+    // data: newAllCommentsData,
+    // error: newAllCommentsError,
+    mutate: newAllCommentsMutate,
+  } = useSWR(GET_NEW_ALL_COMMENTS, fetcher);
 
   const allMutate = () => {
     newNormalTopicMutate();
     newTalkingTopicsMutate();
     newClosedTopicsMutate();
+    newAllCommentsMutate();
   };
 
   useEffect(() => {
@@ -88,12 +107,17 @@ const Index: React.FC = () => {
           {/* 新規作成された話題 */}
           <NormalTopics allMutate={allMutate} />
 
-          <div className="md:w-1/3">
-            {/* 現在の話題 */}
-            <TalkingTopics allMutate={allMutate} />
+          <div className="md:w-3/5 md:flex">
+            <div className="md:w-1/2">
+              {/* 現在の話題 */}
+              <TalkingTopics allMutate={allMutate} />
 
-            {/* 話し終えた話題 */}
-            <ClosedTopics allMutate={allMutate} />
+              {/* 話し終えた話題 */}
+              <ClosedTopics allMutate={allMutate} />
+            </div>
+
+            {/* チャット */}
+            <Chats allMutate={allMutate} />
           </div>
         </div>
       </Layout>

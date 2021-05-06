@@ -10,7 +10,7 @@ import { request } from "graphql-request";
 export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
   allMutate,
 }) => {
-  const { isAdminLogin } = useContext(UserContext);
+  const { isAdminLogin, isAdminEditMode } = useContext(UserContext);
 
   // SWRで最新情報を取得
   const API_ENDPOINT =
@@ -104,7 +104,7 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
                 <h3 className="text-xl font-bold break-words">
                   {talkingTopic.node.title}
                 </h3>
-                {isAdminLogin ? (
+                {isAdminLogin && isAdminEditMode ? (
                   <div className="pt-2 text-center">
                     <Button
                       variant="contained"

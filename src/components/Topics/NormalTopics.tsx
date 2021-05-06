@@ -16,7 +16,7 @@ import { request } from "graphql-request";
 export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
   allMutate,
 }) => {
-  const { isAdminLogin } = useContext(UserContext);
+  const { isAdminLogin, isAdminEditMode } = useContext(UserContext);
 
   // SWRで最新情報を取得
   const API_ENDPOINT =
@@ -123,7 +123,7 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
   return (
     <>
       {/* 新規作成された話題の欄 */}
-      <div className="pt-2 pb-4 px-1 md:w-2/3 border rounded shadow bg-gray-100 m-2">
+      <div className="pt-2 pb-4 px-1 md:w-2/5 border rounded shadow bg-gray-100 m-2">
         <p className="text-center text-sm pt-2">まだの話題</p>
 
         <h2 className="text-3xl text-center pb-4 font-bold">🤔Topics</h2>
@@ -148,10 +148,10 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
           {newNormalTopicsData &&
             newNormalTopicsData.allTopics.edges.map((topic, index) => {
               return (
-                <div className="p-1 md:w-1/3" key={index}>
+                <div className="p-1 md:w-1/2" key={index}>
                   <div className="border rounded p-2 shadow-sm bg-gray-50 md:h-40 h-28 flex flex-col justify-between overflow-y-scroll break-words">
                     <div className="text-lg mb-2">{topic.node.title}</div>
-                    {isAdminLogin ? (
+                    {isAdminLogin && isAdminEditMode ? (
                       <div className="flex justify-around">
                         <Button
                           variant="contained"

@@ -78,6 +78,21 @@ export const GET_CLOSED_TOPICS = gql`
   }
 `;
 
+export const GET_ALL_COMMENTS = gql`
+  query {
+    allComments {
+      edges {
+        node {
+          id
+          text
+          nickname
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
 export const CREATE_TOPIC = gql`
   mutation($title: String!) {
     createTopic(input: { title: $title }) {
@@ -120,6 +135,19 @@ export const DELETE_TOPIC = gql`
       topic {
         id
         title
+      }
+    }
+  }
+`;
+
+export const CREATE_COMMENT = gql`
+  mutation($text: String!, $nickname: String) {
+    createComment(input: { text: $text, nickname: $nickname }) {
+      comment {
+        id
+        text
+        nickname
+        createdAt
       }
     }
   }

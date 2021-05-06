@@ -22,7 +22,6 @@ export default class MyDocument extends Document {
 
           <meta name="twitter:card" content="Summary Card" />
           <meta name="twitter:site" content="@mayo1201blog" />
-          <title>Qin PanelDiscussion</title>
         </Head>
         <body>
           <Main />
