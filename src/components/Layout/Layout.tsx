@@ -101,7 +101,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
                   color="default"
                   onClick={handleModeChange}
                 >
-                  {isAdminEditMode ? "Edit" : "Read"}
+                  {isAdminEditMode ? "read" : "edit"}
                 </Button>
               </li>
               <li className="my-4 mx-2">
@@ -122,7 +122,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
         </header>
         <main>
           <article>
-            <section className="md:px-16 px-2">{children}</section>
+            <section className="md:px-16 px-2 w-full">{children}</section>
           </article>
         </main>
         <footer className="py-6 px-4 mt-20 bg-black">

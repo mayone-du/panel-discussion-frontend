@@ -103,8 +103,9 @@ const Index: React.FC = () => {
           <TopicForm allMutate={allMutate} />
         </div>
 
-        <div className="md:flex">
+        <div className="md:flex w-full">
           {/* 新規作成された話題 */}
+
           <NormalTopics allMutate={allMutate} />
 
           <div className="md:w-3/5 md:flex">
@@ -115,9 +116,10 @@ const Index: React.FC = () => {
               {/* 話し終えた話題 */}
               <ClosedTopics allMutate={allMutate} />
             </div>
-
-            {/* チャット */}
-            <Chats allMutate={allMutate} />
+            <div className="md:w-1/2">
+              {/* チャット */}
+              <Chats allMutate={allMutate} />
+            </div>
           </div>
         </div>
       </Layout>

@@ -67,71 +67,69 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
 
   return (
     <>
-      <div className="md:w-1/2">
-        <div className="max-h-screen bg-gray-100 pt-2 m-2 border rounded shadow">
-          <p className="text-center text-sm pt-2">チャット</p>
+      <div className="bg-gray-100 pt-2 m-2 border rounded shadow">
+        <p className="text-center text-sm pt-2">チャット</p>
 
-          <h2 className="text-3xl text-center pb-4 font-bold">Chat</h2>
+        <h2 className="text-3xl text-center pb-4 font-bold">Chat</h2>
 
-          {/* チャット欄 */}
-          <div className="bg-gray-50 p-2 m-2 rounded border shadow-sm break-words overflow-y-scroll overflow-x-hidden h-2/3">
-            {/* コメント */}
+        {/* チャット欄 */}
+        <div className="bg-gray-50 p-2 m-2 rounded border shadow-sm break-words overflow-y-scroll overflow-x-hidden h-2/3">
+          {/* コメント */}
 
-            {/* エラー時 */}
-            {newAllCommentsError && <div>{newAllCommentsError}</div>}
+          {/* エラー時 */}
+          {newAllCommentsError && <div>{newAllCommentsError}</div>}
 
-            {/* 正常時 */}
-            {newAllCommentsData &&
-              newAllCommentsData.allComments.edges.map((comment, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="rounded-lg px-2 pt-2 pb-4 my-3 border bg-gray-50 shadow-sm relative"
-                  >
-                    <span className="absolute -top-2 left-0 text-xs text-gray-600">
-                      {comment.node.nickname || "匿名"}
-                    </span>
-                    {comment.node.text}
-                    <span className="text-xs text-gray-600 absolute bottom-0 right-0">
-                      {comment.node.createdAt}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-
-          <div className="flex justify-center mt-6">
-            <div className="bg-white">
-              <TextField
-                value={nickname}
-                onChange={handleNicknameChange}
-                label="ニックネーム"
-                variant="outlined"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-center w-full mt-2 pb-4">
-            <div className="w-4/5 bg-white">
-              <TextField
-                variant="outlined"
-                className="w-full"
-                label="コメントを送信"
-                color="primary"
-                value={commentText}
-                onChange={handleCommentChange}
-              />
-            </div>
-            <div className="ml-2 bg-white">
-              <Button variant="outlined" onClick={handleCommentCreate}>
-                <div>
-                  <div className="text-center">
-                    <Send />
-                  </div>
-
-                  <span className="block text-center text-xs">送信</span>
+          {/* 正常時 */}
+          {newAllCommentsData &&
+            newAllCommentsData.allComments.edges.map((comment, index) => {
+              return (
+                <div
+                  key={index}
+                  className="rounded-lg px-2 pt-2 pb-4 my-3 border bg-gray-50 shadow-sm relative"
+                >
+                  <span className="absolute -top-2 left-0 text-xs text-gray-600">
+                    {comment.node.nickname || "匿名"}
+                  </span>
+                  {comment.node.text}
+                  <span className="text-xs text-gray-600 absolute bottom-0 right-0">
+                    {comment.node.createdAt}
+                  </span>
                 </div>
-              </Button>
-            </div>
+              );
+            })}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <div className="bg-white">
+            <TextField
+              value={nickname}
+              onChange={handleNicknameChange}
+              label="ニックネーム"
+              variant="outlined"
+            />
+          </div>
+        </div>
+        <div className="flex items-center justify-center w-full mt-2 pb-4">
+          <div className="w-4/5 bg-white">
+            <TextField
+              variant="outlined"
+              className="w-full"
+              label="コメントを送信"
+              color="primary"
+              value={commentText}
+              onChange={handleCommentChange}
+            />
+          </div>
+          <div className="ml-2 bg-white">
+            <Button variant="outlined" onClick={handleCommentCreate}>
+              <div>
+                <div className="text-center">
+                  <Send />
+                </div>
+
+                <span className="block text-center text-xs">送信</span>
+              </div>
+            </Button>
           </div>
         </div>
       </div>
