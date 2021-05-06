@@ -42,7 +42,7 @@ export const ClosedTopics: React.VFC<{ allMutate: Function }> = ({
     data: newClosedTopicsData,
     error: newClosedTopicsError,
     // mutate: newClosedTopicsMutate,
-  } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher);
+  } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher, { refreshInterval: 1000 });
 
   // 話題を項目ごとにすべて取得するQuery
 

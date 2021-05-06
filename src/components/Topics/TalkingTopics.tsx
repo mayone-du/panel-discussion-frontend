@@ -14,9 +14,9 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
 
   // SWRで最新情報を取得
   const API_ENDPOINT =
-  process.env.NODE_ENV === "production"
-    ? `${process.env.API_ENDPOINT}`
-    : `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`;
+    process.env.NODE_ENV === "production"
+      ? `${process.env.API_ENDPOINT}`
+      : `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`;
 
   const GET_NEW_TALKING_TOPICS = `query {
     allTopics(isTalking: true) {
@@ -37,7 +37,7 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
     data: newTalkingTopicsData,
     error: newTalkingTopicsError,
     // mutate: newTalkingTopicsMutate,
-  } = useSWR(GET_NEW_TALKING_TOPICS, fetcher);
+  } = useSWR(GET_NEW_TALKING_TOPICS, fetcher, { refreshInterval: 1000 });
 
   // 話題を項目ごとにすべて取得するQuery
 
