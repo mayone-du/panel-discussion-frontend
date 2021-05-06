@@ -80,7 +80,7 @@ export const Layout: React.FC<{ children: any }> = ({ children }) => {
               </span>
               によるパネルディスカッション🥳
             </p>
-            <ul className="md:flex md:text-left text-center items-center justify-end md:w-1/3">
+            <ul className="md:flex md:text-left items-center justify-end md:w-1/3">
               <li className="my-4 mx-2">
                 <Link href="/">
                   <Button variant="contained" color="default">
