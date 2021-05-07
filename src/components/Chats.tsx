@@ -7,20 +7,27 @@ import { useMutation } from "@apollo/client";
 import { GET_ALL_COMMENTS, CREATE_COMMENT } from "src/apollo/queries";
 
 export const Chats: React.VFC = () => {
+
+  // 入力欄のローカルstate
   const [commentText, setCommentText] = useState("");
   const [nickname, setNickname] = useState("");
 
+  // コメントのテキストの入力欄の変更
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(e.target.value);
   };
+  // ニックネームの入力欄の変更
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
+
+  // SWRで最新情報を取得
   const API_ENDPOINT =
     process.env.NODE_ENV === "production"
       ? `${process.env.API_ENDPOINT}`
       : `${process.env.NEXT_PUBLIC_DEV_API_URL}graphql/`;
+
   const GET_NEW_ALL_COMMENTS = `query {
     allComments {
       edges {
@@ -41,10 +48,13 @@ export const Chats: React.VFC = () => {
     mutate: newAllCommentsMutate,
   } = useSWR(GET_NEW_ALL_COMMENTS, fetcher, { refreshInterval: 1000 });
 
+  // コメント作成のMutationをimport
   const [createComment] = useMutation(CREATE_COMMENT, {
     refetchQueries: [{ query: GET_ALL_COMMENTS }],
   });
 
+  // コメントが作成されたときの処理
+  // 文字数で2通りのエラーチェックあり
   const handleCommentCreate = async (e: React.ChangeEvent<HTMLFormElement>) => {
     await e.preventDefault();
     if (commentText === "") {
@@ -71,23 +81,25 @@ export const Chats: React.VFC = () => {
 
   // 日付の形式を変換
   const fixDateFormat = useCallback((createdAt: string): string => {
-    const parsedTimestamp = Date.parse(createdAt);
-    const newDate = new Date(parsedTimestamp);
 
+    // タイムスタンプ形式に変換
+    const parsedTimestamp = Date.parse(createdAt);
+    // JSTへ変換
+    const newDate = new Date(parsedTimestamp);
+    // 各項目ごとに値を取得、置き換え
     const newMonth =
       newDate.getMonth() + 1 < 10
         ? "0" + (newDate.getMonth() + 1)
         : newDate.getMonth() + 1;
     const newDay =
       newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
-
     const newHours =
       newDate.getHours() < 10 ? "0" + newDate.getHours() : newDate.getHours();
-
     const newMinutes =
       newDate.getMinutes() < 10
         ? "0" + newDate.getMinutes()
         : newDate.getMinutes();
+
     const fixedDate = `${newDate.getFullYear()}/${newMonth}/${newDay} ${newHours}:${newMinutes}`;
 
     return fixedDate;
@@ -96,9 +108,9 @@ export const Chats: React.VFC = () => {
   return (
     <>
       <div className="bg-gray-100 pt-2 m-2 border rounded shadow">
-        <p className="text-center text-sm pt-2">😎チャット</p>
+        <p className="text-center text-sm pt-2">チャット</p>
 
-        <h2 className="text-3xl text-center pb-4 font-bold">Chat</h2>
+        <h2 className="text-3xl text-center pb-4 font-bold">😎Chat</h2>
 
         {/* チャット欄 */}
         <div className="bg-gray-50 p-2 m-2 rounded border shadow-sm break-words overflow-y-scroll overflow-x-hidden h-96">
@@ -115,11 +127,11 @@ export const Chats: React.VFC = () => {
                   key={index}
                   className="rounded-lg px-2 pt-2 pb-4 my-3 border bg-gray-50 shadow-sm relative"
                 >
-                  <span className="absolute -top-2 left-0 text-xs text-gray-600">
+                  <span className="absolute -top-2 left-0 text-xs text-gray-500">
                     {comment.node.nickname || "匿名"}
                   </span>
                   {comment.node.text}
-                  <span className="text-xs text-gray-600 absolute bottom-0 right-2">
+                  <span className="text-xs text-gray-500 absolute bottom-0 right-2">
                     {fixDateFormat(comment.node.createdAt)}
                   </span>
                 </div>

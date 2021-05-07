@@ -1,7 +1,7 @@
 import { Layout } from "src/components/Layout/Layout";
 import { AuthForm } from "src/components/AuthForm";
 
-const Auth: React.FC = () => {
+const Auth: React.VFC = () => {
   return (
     <>
       <Layout>

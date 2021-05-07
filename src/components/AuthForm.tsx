@@ -10,7 +10,11 @@ export const AuthForm: React.VFC = () => {
   const { isAdminLogin, setIsAdminLogin } = useContext(UserContext);
 
   const router = useRouter();
+
+  // アクセストークン、リフレッシュトークンをを取得するMutation
   const [getTokens] = useMutation(GET_TOKENS);
+
+  // ログイン入力欄のローカルstate
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,7 +25,6 @@ export const AuthForm: React.VFC = () => {
     },
     []
   );
-
   // パスワードの入力欄が変更されたときの処理
   const handlePasswordChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +64,7 @@ export const AuthForm: React.VFC = () => {
       await setPassword("");
 
       // トップページに遷移
-      router.push("/");
+      await router.push("/");
     } catch (error) {
       alert(error);
     }
@@ -69,9 +72,10 @@ export const AuthForm: React.VFC = () => {
 
   // ログアウトボタンが押されたときにCookieのTokenを2つとも削除
   const handleLogout = async () => {
-    destroyCookie(null, "accessToken");
-    destroyCookie(null, "refreshToken");
-    setIsAdminLogin(false);
+    await destroyCookie(null, "accessToken");
+    await destroyCookie(null, "refreshToken");
+    await setIsAdminLogin(false);
+    await router.push("/");
   };
 
   return (

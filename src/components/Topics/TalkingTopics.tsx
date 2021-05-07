@@ -39,18 +39,15 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
     // mutate: newTalkingTopicsMutate,
   } = useSWR(GET_NEW_TALKING_TOPICS, fetcher, { refreshInterval: 1000 });
 
-  // 話題を項目ごとにすべて取得するQuery
-
+  // 会話中の話題をすべて取得するQuery
   const {
     loading: talkingTopicsLoading,
     error: talkingTopicsError,
     // data: talkingTopicsData,
   } = useQuery(GET_TALKING_TOPICS);
 
-  // 話題の状況を更新するMutation
-  const [updateTopic] = useMutation(UPDATE_TOPIC, {
-    refetchQueries: [{ query: GET_TALKING_TOPICS }],
-  });
+  // 話題の状況を更新（終了）するMutation
+  const [updateTopic] = useMutation(UPDATE_TOPIC);
 
   // 話題を終了するボタンを押したときの処理
   const handleClosed = async (topic) => {

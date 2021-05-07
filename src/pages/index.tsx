@@ -8,7 +8,7 @@ import { TalkingTopics } from "src/components/Topics/TalkingTopics";
 import { ClosedTopics } from "src/components/Topics/ClosedTopics";
 import { Chats } from "src/components/Chats";
 
-const Index: React.FC = () => {
+const Index: React.VFC = () => {
   // SWRで通常、進行中、完了のすべての項目の最新情報を取得
   const API_ENDPOINT =
     process.env.NODE_ENV === "production"
@@ -67,7 +67,7 @@ const Index: React.FC = () => {
   const {
     // data: newNormalTopicsData,
     // error: newNormalTopicsError,
-    mutate: newNormalTopicMutate,
+    mutate: newNormalTopicsMutate,
   } = useSWR(GET_NEW_NORMAL_TOPICS, fetcher);
   const {
     // data: newTalkingTopicsData,
@@ -86,21 +86,21 @@ const Index: React.FC = () => {
   } = useSWR(GET_NEW_ALL_COMMENTS, fetcher);
 
   const allMutate = () => {
-    newNormalTopicMutate();
+    newNormalTopicsMutate();
     newTalkingTopicsMutate();
     newClosedTopicsMutate();
-    newAllCommentsMutate();
   };
 
   useEffect(() => {
     allMutate();
+    newAllCommentsMutate();
   }, []);
 
   return (
     <>
       <Layout>
         <div className="flex justify-center py-4">
-          <TopicForm allMutate={allMutate} />
+          <TopicForm newNormalTopicsMutate={newNormalTopicsMutate} />
         </div>
 
         <div className="md:flex w-full">

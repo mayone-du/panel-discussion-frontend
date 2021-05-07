@@ -3,8 +3,6 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { DeleteForever } from "@material-ui/icons";
 import { useContext, useEffect } from "react";
 import {
-  GET_NORMAL_TOPICS,
-  GET_TALKING_TOPICS,
   GET_CLOSED_TOPICS,
   DELETE_TOPIC,
 } from "src/apollo/queries";
@@ -42,8 +40,7 @@ export const ClosedTopics: React.VFC = () => {
     mutate: newClosedTopicsMutate,
   } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher, { refreshInterval: 1000 });
 
-  // 話題を項目ごとにすべて取得するQuery
-
+  // 終了した話題をすべて取得するQuery
   const {
     loading: closedTopicLoading,
     error: closedTopicError,
@@ -51,13 +48,7 @@ export const ClosedTopics: React.VFC = () => {
   } = useQuery(GET_CLOSED_TOPICS);
 
   // 話題を削除するMutation
-  const [deleteTopic] = useMutation(DELETE_TOPIC, {
-    refetchQueries: [
-      { query: GET_NORMAL_TOPICS },
-      { query: GET_TALKING_TOPICS },
-      { query: GET_CLOSED_TOPICS },
-    ],
-  });
+  const [deleteTopic] = useMutation(DELETE_TOPIC);
 
   // 話題を削除するボタンを押したときの処理
   const handleDelete = async (topic) => {

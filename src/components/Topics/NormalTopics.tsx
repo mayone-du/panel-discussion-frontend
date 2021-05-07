@@ -4,8 +4,6 @@ import { DeleteForever, Check, Chat } from "@material-ui/icons";
 import { useContext } from "react";
 import {
   GET_NORMAL_TOPICS,
-  GET_TALKING_TOPICS,
-  GET_CLOSED_TOPICS,
   UPDATE_TOPIC,
   DELETE_TOPIC,
 } from "src/apollo/queries";
@@ -51,22 +49,10 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
   } = useQuery(GET_NORMAL_TOPICS);
 
   // 話題の状況を更新するMutation
-  const [updateTopic] = useMutation(UPDATE_TOPIC, {
-    refetchQueries: [
-      { query: GET_NORMAL_TOPICS },
-      { query: GET_TALKING_TOPICS },
-      { query: GET_CLOSED_TOPICS },
-    ],
-  });
+  const [updateTopic] = useMutation(UPDATE_TOPIC);
 
   // 話題を削除するMutation
-  const [deleteTopic] = useMutation(DELETE_TOPIC, {
-    refetchQueries: [
-      { query: GET_NORMAL_TOPICS },
-      { query: GET_TALKING_TOPICS },
-      { query: GET_CLOSED_TOPICS },
-    ],
-  });
+  const [deleteTopic] = useMutation(DELETE_TOPIC);
 
   // 進行中の話題にするボタンを押したときの処理
   const handleTalking = async (topic) => {

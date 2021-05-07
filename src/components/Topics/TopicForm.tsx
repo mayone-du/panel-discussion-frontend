@@ -4,8 +4,8 @@ import { Create } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { GET_NORMAL_TOPICS, CREATE_TOPIC } from "src/apollo/queries";
 
-export const TopicForm: React.VFC<{ allMutate: Function }> = ({
-  allMutate,
+export const TopicForm: React.VFC<{ newNormalTopicsMutate: Function }> = ({
+  newNormalTopicsMutate,
 }) => {
   // 話題のタイトル入力欄のvalueをstateとして保持
   const [topicTitle, setTopicTitle] = useState("");
@@ -47,8 +47,8 @@ export const TopicForm: React.VFC<{ allMutate: Function }> = ({
             title: topicTitle,
           },
         });
-        setTopicTitle("");
-        allMutate();
+        await setTopicTitle("");
+        await newNormalTopicsMutate();
       } catch (error) {
         alert(error);
       }
