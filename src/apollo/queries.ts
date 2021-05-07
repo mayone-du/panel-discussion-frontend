@@ -18,21 +18,6 @@ export const ALL_TOKEN_REFRESH = gql`
   }
 `;
 
-// export const GET_ALL_TOPICS = gql`
-//   query {
-//     allTopics {
-//       edges {
-//         node {
-//           id
-//           title
-//           isTalking
-//           isClosed
-//         }
-//       }
-//     }
-//   }
-// `;
-
 export const GET_NORMAL_TOPICS = gql`
   query {
     allTopics(isTalking: false, isClosed: false) {

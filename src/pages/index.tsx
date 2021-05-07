@@ -114,11 +114,11 @@ const Index: React.FC = () => {
               <TalkingTopics allMutate={allMutate} />
 
               {/* 話し終えた話題 */}
-              <ClosedTopics allMutate={allMutate} />
+              <ClosedTopics />
             </div>
             <div className="md:w-1/2">
               {/* チャット */}
-              <Chats allMutate={allMutate} />
+              <Chats />
             </div>
           </div>
         </div>

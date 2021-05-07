@@ -12,9 +12,7 @@ import { UserContext } from "src/contexts/UserContext";
 import useSWR from "swr";
 import { request } from "graphql-request";
 
-export const ClosedTopics: React.VFC<{ allMutate: Function }> = ({
-  allMutate,
-}) => {
+export const ClosedTopics: React.VFC = () => {
   const { isAdminLogin, isAdminEditMode } = useContext(UserContext);
 
   // SWRで最新情報を取得
@@ -41,7 +39,7 @@ export const ClosedTopics: React.VFC<{ allMutate: Function }> = ({
   const {
     data: newClosedTopicsData,
     error: newClosedTopicsError,
-    // mutate: newClosedTopicsMutate,
+    mutate: newClosedTopicsMutate,
   } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher, { refreshInterval: 1000 });
 
   // 話題を項目ごとにすべて取得するQuery
@@ -69,14 +67,14 @@ export const ClosedTopics: React.VFC<{ allMutate: Function }> = ({
           id: topic.node.id,
         },
       });
-      allMutate();
+      await newClosedTopicsMutate();
     } catch (error) {
       alert(error);
     }
   };
 
   useEffect(() => {
-    allMutate();
+    newClosedTopicsMutate();
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import React, { useCallback, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { GET_ALL_COMMENTS, CREATE_COMMENT } from "src/apollo/queries";
 
-export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
+export const Chats: React.VFC = () => {
   const [commentText, setCommentText] = useState("");
   const [nickname, setNickname] = useState("");
 
@@ -38,7 +38,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
   const {
     data: newAllCommentsData,
     error: newAllCommentsError,
-    // mutate: newAllCommentsMutate,
+    mutate: newAllCommentsMutate,
   } = useSWR(GET_NEW_ALL_COMMENTS, fetcher, { refreshInterval: 1000 });
 
   const [createComment] = useMutation(CREATE_COMMENT, {
@@ -61,7 +61,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
             nickname: nickname,
           },
         });
-        await allMutate();
+        await newAllCommentsMutate();
         await setCommentText("");
       } catch (error) {
         alert(error);
@@ -71,8 +71,6 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
 
   // 日付の形式を変換
   const fixDateFormat = useCallback((createdAt: string): string => {
-    console.log("fix date");
-
     const parsedTimestamp = Date.parse(createdAt);
     const newDate = new Date(parsedTimestamp);
 
@@ -98,7 +96,7 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
   return (
     <>
       <div className="bg-gray-100 pt-2 m-2 border rounded shadow">
-        <p className="text-center text-sm pt-2">チャット</p>
+        <p className="text-center text-sm pt-2">😎チャット</p>
 
         <h2 className="text-3xl text-center pb-4 font-bold">Chat</h2>
 
@@ -122,9 +120,6 @@ export const Chats: React.VFC<{ allMutate: Function }> = ({ allMutate }) => {
                   </span>
                   {comment.node.text}
                   <span className="text-xs text-gray-600 absolute bottom-0 right-2">
-                    {/* {comment.node.createdAt.substr(11,2)} */}
-                    {/* {comment.node.createdAt.substr(0,19).replace(/-/g, "/").replace(/T/g, '-').replace(parseFloat(comment.node.createdAt.substr(11,2)), parseFloat(comment.node.createdAt.substr(11,2)) + 9)} */}
-                    {/* {Date(Date.parse(comment.node.createdAt))} */}
                     {fixDateFormat(comment.node.createdAt)}
                   </span>
                 </div>

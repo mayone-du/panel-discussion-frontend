@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { Button, CircularProgress } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GET_TALKING_TOPICS, UPDATE_TOPIC } from "src/apollo/queries";
 import { UserContext } from "src/contexts/UserContext";
 import useSWR from "swr";
@@ -63,15 +63,11 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
           isClosed: !topic.node.isClosed,
         },
       });
-      allMutate();
+      await allMutate();
     } catch (error) {
       alert(error);
     }
   };
-
-  useEffect(() => {
-    allMutate();
-  }, []);
 
   return (
     <>

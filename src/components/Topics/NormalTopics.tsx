@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { Button, CircularProgress } from "@material-ui/core";
 import { DeleteForever, Check, Chat } from "@material-ui/icons";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   GET_NORMAL_TOPICS,
   GET_TALKING_TOPICS,
@@ -79,7 +79,7 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
           isClosed: false,
         },
       });
-      allMutate();
+      await allMutate();
     } catch (error) {
       alert(error);
     }
@@ -96,7 +96,7 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
           isClosed: !topic.node.isClosed,
         },
       });
-      allMutate();
+      await allMutate();
     } catch (error) {
       alert(error);
     }
@@ -110,15 +110,11 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
           id: topic.node.id,
         },
       });
-      allMutate();
+      await allMutate();
     } catch (error) {
       alert(error);
     }
   };
-
-  useEffect(() => {
-    allMutate();
-  }, []);
 
   return (
     <>
