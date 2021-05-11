@@ -46,7 +46,7 @@ export const Chats: React.VFC = () => {
     data: newAllCommentsData,
     error: newAllCommentsError,
     mutate: newAllCommentsMutate,
-  } = useSWR(GET_NEW_ALL_COMMENTS, fetcher, { refreshInterval: 100 });
+  } = useSWR(GET_NEW_ALL_COMMENTS, fetcher, { refreshInterval: 3000 });
 
   // コメント作成のMutationをimport
   const [createComment] = useMutation(CREATE_COMMENT, {

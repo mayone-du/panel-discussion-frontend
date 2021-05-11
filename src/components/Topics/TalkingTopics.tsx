@@ -37,7 +37,7 @@ export const TalkingTopics: React.VFC<{ allMutate: Function }> = ({
     data: newTalkingTopicsData,
     error: newTalkingTopicsError,
     // mutate: newTalkingTopicsMutate,
-  } = useSWR(GET_NEW_TALKING_TOPICS, fetcher, { refreshInterval: 100 });
+  } = useSWR(GET_NEW_TALKING_TOPICS, fetcher, { refreshInterval: 3000 });
 
   // 会話中の話題をすべて取得するQuery
   const {
