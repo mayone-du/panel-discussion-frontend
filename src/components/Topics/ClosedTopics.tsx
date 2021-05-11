@@ -38,7 +38,7 @@ export const ClosedTopics: React.VFC = () => {
     data: newClosedTopicsData,
     error: newClosedTopicsError,
     mutate: newClosedTopicsMutate,
-  } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher, { refreshInterval: 1000 });
+  } = useSWR(GET_NEW_CLOSED_TOPICS, fetcher, { refreshInterval: 100 });
 
   // 終了した話題をすべて取得するQuery
   const {

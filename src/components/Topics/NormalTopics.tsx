@@ -39,7 +39,7 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
     data: newNormalTopicsData,
     error: newNormalTopicsError,
     // mutate: newNormalTopicMutate,
-  } = useSWR(GET_NEW_NORMAL_TOPICS, fetcher, { refreshInterval: 1000 });
+  } = useSWR(GET_NEW_NORMAL_TOPICS, fetcher, { refreshInterval: 100 });
 
   // 話題を項目ごとにすべて取得するQuery
   const {
@@ -66,6 +66,7 @@ export const NormalTopics: React.VFC<{ allMutate: Function }> = ({
         },
       });
       await allMutate();
+      // await console.log("hoge");
     } catch (error) {
       alert(error);
     }
